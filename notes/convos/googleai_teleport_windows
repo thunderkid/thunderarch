@@ -1,0 +1,169 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+AI Mode
+All
+Images
+Videos
+News
+More
+Sign in
+
+
+i want a workflow on linux that's fast, keyboard focused, and efficient. i'm currently using hyprland. 3 monitors on desktop. when i do much typing on my side monitors, it's awkward after a bit. i'd like to be able to quickly teleport my active window to the center of the center monitor, *leaving a placeholder there - or ideally a copy of the active window* so other windows don't shift around. this is purely for typing convenience. then when i'm done, i'd like to be able to easily teleport it back. how can i achieve this?
+To achieve a fast, keyboard-focused workflow that brings windows to your center monitor without disrupting your side-monitor layouts, you can use a custom script leveraging hyprctl. 
+Since Hyprland doesn't have a native "placeholder" window, the most efficient method is to float the active window and teleport it to the center monitor. This keeps the original tiling slot "reserved" in the background so other windows don't shift. 
+The "Teleport & Return" Workflow
+This approach allows you to "summon" any window to your center view for typing and "dismiss" it back to its original location when finished.
+1. Create the Teleport Script
+Create a script (e.g., ~/.config/hypr/scripts/teleport.sh) that toggles the window state. 
+bash
+#!/bin/bash
+# Get active window address and its current monitor
+WINDOW_ADDR=$(hyprctl activewindow -j | jq -r '.address')
+IS_FLOATING=$(hyprctl activewindow -j | jq -r '.floating')
+
+if [ "$IS_FLOATING" = "false" ]; then
+    # 1. Teleport to Center: Float it, move to center monitor, and center it
+    # Replace 'DP-1' with your center monitor's name (check 'hyprctl monitors')
+    hyprctl dispatch togglefloating address:$WINDOW_ADDR
+    hyprctl dispatch movewindowmon address:$WINDOW_ADDR DP-1 
+    hyprctl dispatch centerwindow 1
+    # Optional: Resize for comfortable typing
+    hyprctl dispatch resizeactive exact 1200 800
+else
+    # 2. Return to Original: Unfloat it (it will snap back to its previous tiling slot)
+    hyprctl dispatch togglefloating address:$WINDOW_ADDR
+fi
+Use code with caution.
+
+Why this works: When you toggle a window to floating in Hyprland, it technically stays assigned to its original tiling position in the layout. Toggling it back to "tiled" (togglefloating again) snaps it back exactly where it was. 
+2. Bind the Action
+Add a keybinding in your hyprland.conf to trigger the script: 
+bash
+# Example: Super + Shift + T to teleport
+bind = $mainMod SHIFT, T, exec, ~/.config/hypr/scripts/teleport.sh
+Use code with caution.
+
+Alternatives for "Placeholder" Behavior
+If you prefer a visual "copy" or absolute layout stability:
+The Scratchpad (Special Workspace): Move the window to a Special Workspace (movetoworkspace, special). This hides it completely, but if it was the only window on a side monitor, that monitor will become empty instead of shifting.
+Swap Instead of Move: Use swapwindow to swap the active window with whatever is currently in the center of your main monitor. This is better if you always want something on your side monitors. 
+Efficiency Tips
+Identify Monitor Names: Run hyprctl monitors to get the exact string (like HDMI-A-1 or DP-1) for your center screen.
+Automatic Centering: Use the windowrule center to ensure any window you float manually is automatically positioned in the middle. 
+These guides demonstrate how to float and center windows on your main monitor to create a typing-friendly zone without disrupting your other displays:
+Window Rules - Hyprland Wiki
+Jan 24, 2026 — Floats a window. tile. [on] Tiles a window. fullscreen. [on] Fullscreens a window. maximize. [on] Maximizes a window. fullscreen_s...
+
+Hyprland Wiki
+Hyprland With Multiple Monitors - Cascade
+Sep 8, 2024 — You can also run these operations by command hyprctl dispatch : hyprctl dispatch workspace 1 hyprctl dispatch movetoworkspace 1 hy...
+
+cascade.moe
+
+New Dwindle layout dispatchers: `movewindowsplit` and ...
+Apr 17, 2023 — swapsplit. There's swapwindow but it is only directional and for individual windows, it's easier to hit e.g. SUPER + S to swap the...
+
+GitHub·
+
+Dispatchers - Hyprland Wiki
+Table_title: List of Dispatchers Table_content: header: | Dispatcher | Description | Params | row: | Dispatcher: movefocus | Descr...
+
+Hyprland Wiki
+How to center window to center of the screen : r/hyprland - Reddit
+Dec 26, 2024 — Comments Section * To center a window in a master layout there is the displatch layoutmsg orientationcenter . Fir dwindle this not...
+
+Reddit
+
+Auto-Float Windows with togglefloating and centerwindow
+Sep 15, 2025 — How do I use hyprctl dispatch togglefloating? The togglefloating dispatcher switches a window between floating and tiled mode: # T...
+
+Filip Mikina
+
+Would you like help identifying your monitor names or refining the script to automatically resize the window for your specific center monitor resolution?
+
+
+
+
+undefined
+undefined
+undefined
+9 sites
+How to center window to center of the screen : r/hyprland
+Dec 26, 2024 — Comments Section. Jahdab. • 1y ago. this is my keybind to toggle float, resize and center any window bind = $mainMod+Shift, C, exe...
+
+Reddit
+
+Dispatchers - Hyprland Wiki
+Table_title: List of Dispatchers Table_content: header: | Dispatcher | Description | Params | row: | Dispatcher: movefocus | Descr...
+
+Hyprland Wiki
+Auto-Float Windows with togglefloating and centerwindow
+Sep 15, 2025 — How do I use hyprctl dispatch togglefloating? The togglefloating dispatcher switches a window between floating and tiled mode: # T...
+
+Filip Mikina
+
+Show all
+i'm trying to  understand hyprctl. when i say hyprctl activewindow
+i get Window 5538331bb490 -> myname@mycomputer:~:
+etc
+but then hyprctl dispatch togglefloating address:55e8331bb490 says window not found
+The reason your command is failing is that hyprctl requires addresses to be prefixed with 0x to be recognized as hexadecimals. 
+When you run hyprctl activewindow, it displays the raw hex address (e.g., 5538331bb490). However, the dispatch command interprets that raw number incorrectly unless you explicitly tell it it's a hex address. 
+Correct Syntax
+To toggle floating using an address, use this format: 
+bash
+hyprctl dispatch togglefloating address:0x5538331bb490
+Use code with caution.
+
+Pro-Tip: Automated Address Handling
+If you are writing scripts, you can use the -j (JSON) flag with jq to automatically grab the correctly formatted address:
+The Manual Way: Add 0x to whatever hyprctl activewindow gives you.
+The Scripting Way: Use this command to get the address of the currently active window and toggle its floating state immediately:
+bash
+hyprctl dispatch togglefloating address:0x$(hyprctl activewindow -j | jq -r '.address')
+Use code with caution.
+
+Why "Window not found" happens:
+Missing Prefix: Without 0x, Hyprland might try to parse the string as a decimal or a different window identifier (like a title or class).
+Typo in Address: Ensure you are copying the full hex string. Note that in your example, you provided 5538331bb490 but then tried to call 55e8331bb490 (a subtle 'e' instead of '3'); using the 0x$(...) subshell method above eliminates this risk. 
+These technical guides explain how to correctly format window addresses for "hyprctl" commands and how to automatically extract them for scripting:
+Using hyprctl - Hyprland Wiki
+Commands * hyprctl dispatch exec kitty hyprctl dispatch -- exec kitty --single-instance hyprctl dispatch pseudo x. * hyprctl keywo...
+
+Hyprland Wiki
+Auto-Float Windows with togglefloating and centerwindow
+Sep 15, 2025 — How do I use hyprctl dispatch togglefloating? The togglefloating dispatcher switches a window between floating and tiled mode: # T...
+
+Filip Mikina
+
+Dispatchers - Hyprland Wiki
+Jan 24, 2026 — Table_title: Parameter explanation Table_content: header: | Param type | Description | row: | Param type: window | Description: a ...
+
+Hyprland Wiki
+Do you have jq installed on your system to help with these automated hyprctl scripts? 
+
+
+
+
+undefined
+undefined
+4 sites
+Dispatchers - Hyprland Wiki
+Jan 24, 2026 — Executing with rules. bind = mod, key, exec, [rules...] command. For example: bind = SUPER, E, exec, [workspace 2 silent; float; m...
+
+Hyprland Wiki
+Using hyprctl - Hyprland Wiki
+Commands * hyprctl dispatch exec kitty hyprctl dispatch -- exec kitty --single-instance hyprctl dispatch pseudo x. * hyprctl keywo...
+
+Hyprland Wiki
+Auto-Float Windows with togglefloating and centerwindow
+Sep 15, 2025 — How do I use hyprctl dispatch togglefloating? The togglefloating dispatcher switches a window between floating and tiled mode: # T...
+
+Filip Mikina
+
+Show all
+Ask anything
+
+
+AI Mode response is ready

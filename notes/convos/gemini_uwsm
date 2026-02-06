@@ -1,0 +1,74 @@
+Gemini
+Conversation with Gemini
+im using hyprland. currently launching it from command line with just hyprland. want to try niri too. i understand i should be using some wrapper that sets up env variables correctly. it's on wayland.
+
+Moving from a bare Hyprland command to a structured setup is a great move. When you start a Wayland compositor from the TTY, you usually need to handle two things: exporting environment variables (so apps like Firefox or Spotify know to use Wayland) and Systemd integration (so your screen sharer and portals actually work).
+
+Since you want to swap between Hyprland and Niri, you have two main paths: the "Modern/Automated" way (recommended) or the "Manual Wrapper" way.
+
+1. The Modern Way: UWSM (Recommended)
+The Universal Wayland Session Manager (UWSM) is the current gold standard. It wraps your compositor into a Systemd unit on the fly, ensuring environment variables are cleaned up when you switch between Hyprland and Niri.
+
+Install it: (e.g., sudo pacman -S uwsm)
+
+To start Hyprland: uwsm start hyprland.desktop
+
+To start Niri: uwsm start niri.desktop
+
+Why this is better: It automatically handles the environment variables (like XDG_CURRENT_DESKTOP) and ensures that when you quit Hyprland to try Niri, the old variables don't "leak" into the new session.
+
+2. The Manual Wrapper Way
+If you prefer a simple script, you can create a "wrapped" launcher. This is what most people did before UWSM.
+
+For Hyprland
+Create a file at ~/.local/bin/start-hypr and make it executable (chmod +x):
+
+Bash
+#!/bin/sh
+
+# Toolkit Backend Variables
+export GDK_BACKEND=wayland,x11
+export QT_QPA_PLATFORM="wayland;xcb"
+export SDL_VIDEODRIVER=wayland
+export CLUTTER_BACKEND=wayland
+
+# XDG Specifications
+export XDG_CURRENT_DESKTOP=Hyprland
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=Hyprland
+
+# NVIDIA Users only
+# export GBM_BACKEND=nvidia-drm
+# export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+exec Hyprland
+For Niri
+Niri is a bit more "modern" and actually comes with its own helper called niri-session.
+
+To launch: Just run niri-session instead of niri.
+
+It automatically exports the necessary variables and integrates with Systemd/D-Bus.
+
+Environment Overrides: In Niri, you can set specific variables directly in your config file (~/.config/niri/config.kdl):
+
+Code snippet
+environment {
+    QT_QPA_PLATFORM "wayland"
+    DISPLAY ":0" // If using xwayland-satellite
+}
+Summary Comparison
+Feature	Just running hyprland	Wrapper Script	UWSM (Best)
+App Compatibility	Poor (Apps use X11)	Good	Excellent
+Screen Sharing	Often breaks	Hit or miss	Works (via Systemd)
+Switching WMs	Messy (Env leaks)	Manual cleanup	Clean (Session-based)
+Important Note on NVIDIA
+If you are on an NVIDIA card, these wrappers are mandatory. Without them, you'll likely see flickering or a black screen. You'll need to uncomment the NVIDIA lines in the script above.
+
+Would you like me to help you set up the specific Niri configuration file so your keybinds feel similar to your Hyprland setup?
+
+
+
+
+Gemini can make mistakes, so double-check it
+
+

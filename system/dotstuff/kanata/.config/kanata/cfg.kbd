@@ -1,0 +1,22 @@
+;; Simple Kanata test config
+
+(defsrc
+  caps a s d
+)
+
+(defalias
+  ;; tap-hold: tap for escape, hold for leftcontrol
+  capsw (tap-hold 200 200 esc lctl)
+  
+  ;; layer toggle: hold 'a' to activate the 'utility' layer
+  ;; a_util (tap-hold 100 100 a (layer-toggle utility))
+  a_util (tap-hold-press 200 200 a (layer-toggle utility))
+)
+
+(deflayer default
+  @capsw @a_util s d
+)
+
+(deflayer utility
+  _      _    up down
+)

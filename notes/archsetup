@@ -1,0 +1,7 @@
+generate locale data
+	edit /etc/locale.gen      uncomment EN_US utf_8 line
+	sudo locale-gen
+
+
+fonts: needed nerdfonts i think for terminal. toff2 or something variant
+	for waybar.

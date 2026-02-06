@@ -1,0 +1,251 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Sign in to start saving your chats
+Once you're signed in, you can access your recent chats here.
+Conversation with Gemini
+so i want to use uwsm to manage niri and hyprland. i'm currently using hyprland directly from terminal. i'm on arch with wayland. how do i install niri and uwsm and launch using uwsm instead. also, i'm on a framework 13 laptop. how do i switch from hyprland back into the 'native terminal' and back again?
+
+Moving to uwsm (Universal Wayland Session Manager) is a smart move for Arch users. It handles all the messy environment variables and systemd integration that usually make Wayland sessions a headache.
+
+Since you're on a Framework 13, you'll also want to make sure your function keys are behaving so you can hop between your session and the TTY easily.
+
+1. Install niri and uwsm
+Since you are on Arch, everything is available in the main repositories or the AUR.
+
+Bash
+# Install niri and uwsm
+sudo pacman -S niri uwsm
+
+# Recommended: Install whiptail (libnewt) for the interactive selector
+sudo pacman -S libnewt
+2. Launching via uwsm
+Instead of running Hyprland or niri directly, you wrap them in uwsm. This allows the session to be managed as a systemd unit.
+
+The Manual Way (Testing)
+To start a session manually from the TTY:
+
+Bash
+uwsm start hyprland-uwsm.desktop
+# OR
+uwsm start niri-uwsm.desktop
+(Note: uwsm automatically looks for the .desktop files in /usr/share/wayland-sessions/).
+
+The "Smart" Way (Login Script)
+To get a menu when you log in, add this to the end of your ~/.bash_profile (or ~/.zprofile):
+
+Bash
+if uwsm check may-start && uwsm select; then
+    exec uwsm start default
+fi
+This script checks if you're in a TTY and haven't started a session yet. uwsm select will pop up a menu asking whether you want to launch Hyprland or niri.
+
+3. Switching back to the "Native Terminal" (TTY)
+On your Framework 13, the "native terminal" is actually TTY1–TTY6. Your Wayland session usually lives on TTY1 or TTY2.
+
+The Key Combination
+To switch from Hyprland/niri back to a terminal:
+
+Ctrl + Alt + F3 (or F4, F5, etc.)
+
+The Framework "Fn" Catch
+By default, the Framework 13 function row acts as Media Keys (Volume, Brightness). To register a "Function" key (like F3), you must hold the Fn key.
+
+The Combo: Ctrl + Alt + Fn + F3
+
+[!TIP] Fn Lock: You can toggle the default behavior by pressing Fn + Esc. If Fn Lock is ON, you only need Ctrl + Alt + F3.
+
+Getting Back to the Desktop
+To return to your graphical session:
+
+Try Ctrl + Alt + F1 or Ctrl + Alt + F2. One will be your login TTY, and the other will be your running Wayland session.
+
+4. Why use uwsm?
+When you launch "directly," things like screen sharing (XDG Portals) often break because the environment variables aren't shared with systemd. uwsm fixes this by:
+
+Starting a systemd scope for the compositor.
+
+Properly shutting down services when you exit.
+
+Ensuring WAYLAND_DISPLAY is known to all background apps.
+
+Would you like me to help you set up a basic niri configuration file so it's ready to go when you first launch it?
+
+do i need anything special in the niri or hyprland configs to allow uwsm?
+
+To get the most out of uwsm, you actually want to remove certain things from your existing configs and change how you launch apps. Think of it as moving the "brain" of your session from the compositor itself to the systemd manager.
+
+Here is what you need to change for both Hyprland and niri:
+
+1. Move Environment Variables
+The biggest change is where you store things like cursor themes, toolkit backends (GTK/Qt), and NVIDIA flags.
+
+Stop using: env = ... in hyprland.conf.
+
+Start using: ~/.config/uwsm/env
+
+Uwsm automatically loads environment files. Create these files and use standard shell export syntax:
+
+For general variables (Theming, Editor, etc.): Put these in ~/.config/uwsm/env
+
+Bash
+export EDITOR=nvim
+export XCURSOR_SIZE=24
+export QT_QPA_PLATFORMTHEME=qt6ct
+For Hyprland-specific variables: Put these in ~/.config/uwsm/env-hyprland
+
+Bash
+export HYPRCURSOR_THEME=MyCursor
+2. Update Application Launching
+To take advantage of systemd's resource management (and to make sure apps don't crash if the compositor restarts), you should wrap your app launches in uwsm app --.
+
+In Hyprland (hyprland.conf)
+Change your keybinds and autostarts:
+
+Ini, TOML
+# Instead of: exec-once = waybar
+exec-once = uwsm app -- waybar
+
+# Instead of: bind = $mainMod, Q, exec, kitty
+bind = $mainMod, Q, exec, uwsm app -- kitty
+In niri (config.kdl)
+Similarly, in your niri config:
+
+Code snippet
+spawn-at-startup "uwsm" "app" "--" "waybar"
+
+binds {
+    Mod+Return { spawn "uwsm" "app" "--" "alacritty"; }
+}
+3. Handling the "Session" (niri-specific)
+For niri, you have two ways to start it. Since you are using uwsm, you should use the one that integrates with systemd units:
+
+Make sure you have xdg-desktop-portal-gnome or xdg-desktop-portal-gtk installed for screen sharing.
+
+When using uwsm start niri-uwsm.desktop, uwsm will automatically trigger the graphical-session.target, which starts your background services (like notification daemons or status bars) if they have systemd units.
+
+4. Why the uwsm app -- prefix?
+By using this prefix:
+
+Cgroups: Each app gets its own "slice." If your browser hangs and eats 100% CPU, it won't take down the compositor with it.
+
+Clean Shutdown: When you quit Hyprland/niri, uwsm sends a proper SIGTERM to every app, saving your browser tabs and file transfers.
+
+Portals: It ensures that apps like OBS or Discord can "see" the Wayland session for screen sharing.
+
+Quick Tip for Framework 13
+Since the Framework screen is quite high-resolution, you might want to set your scaling in the compositor configs, but keep your Xcursor size in ~/.config/uwsm/env so it remains consistent across all apps and both compositors.
+
+Would you like a template for a systemd-ready Waybar config that starts automatically with uwsm?
+
+i'm worried about this stuff where hyprland now classes uwsm as experimental. under what circumstances is it dangerous? does this hold for niri too? given i want something that works across 3 monitor desktop ad laptop, should i use it or not?
+
+I understand the hesitation. When the lead developer of a project as big as Hyprland adds an "experimental" warning to a tool, it sounds scary.
+
+However, in the Linux world—and specifically in the context of uwsm—"dangerous" usually doesn't mean "this will fry your hardware" or "this will delete your files." It almost always means "this might break your session or make debugging your config a nightmare."
+
+Here is the breakdown of why that label exists, whether it applies to niri, and if it’s right for your multi-monitor Framework setup.
+
+1. Why the "Experimental" Warning?
+The "danger" with uwsm is purely architectural.
+
+Complex Debugging: When you launch Hyprland directly, it's one process. If something breaks, the logs are right there. With uwsm, your session is split into dozen of systemd units. If your bar doesn't start, is it a Hyprland bug? A uwsm bug? Or a systemd configuration error? This makes support much harder for the Hyprland devs.
+
+Startup Race Conditions: Because uwsm tries to start things in parallel using systemd, occasionally an app (like a status bar) might try to start before the Wayland socket is fully ready, leading to a "failed to start" loop.
+
+The "Vaxry" Factor: The lead dev of Hyprland (Vaxry) prefers to keep the compositor "lean" and doesn't want to officially support the complex systemd integration that uwsm requires. He recently introduced start-hyprland as a simpler middle-ground.
+
+2. Does this hold for niri?
+No. In fact, the niri community and its developer (YaLTeR) are much more supportive of systemd-integrated launches.
+
+niri actually provides its own niri-session script that does exactly what uwsm does (handling environment variables for systemd).
+
+Many niri users find that uwsm is the most reliable way to handle the "infinite strip" logic across multiple monitors, as it ensures your background services (like the one that remembers window positions) are managed properly.
+
+3. Should you use it for 3 monitors + Laptop?
+For your specific setup (3 monitors on a desktop + a Framework 13), I actually recommend using uwsm (or at least niri-session), and here’s why:
+
+Factor	Why uwsm helps
+Multi-Monitor	uwsm ensures XDG_CURRENT_DESKTOP is set correctly for all monitors, which is critical for screen sharing (OBS/Discord) across different screens.
+Graceful Exit	On a laptop, you might close the lid or kill the session frequently. uwsm ensures your apps save their state (like browser tabs) instead of being "hard killed" by the TTY.
+Framework Scaling	Since you'll likely use fractional scaling on the Framework but 1x scaling on your monitors, uwsm manages the environment variables that help GTK/Qt apps handle those transitions without blurring.
+The Verdict: Use it, but keep a "Backdoor"
+Since you are already comfortable launching from the terminal, you have nothing to fear.
+
+My advice:
+
+Try it: Follow the setup for uwsm. It is the "correct" way to do Wayland in 2026.
+
+Keep your old way: Don't delete your ability to just type Hyprland in a TTY. If uwsm ever glitches after an update, you just Ctrl+Alt+F3 to a different TTY and launch the compositor manually to fix your config.
+
+Would you like me to show you how to set up a "fallback" command in your bash profile so you can choose between a uwsm launch and a "naked" launch?
+
+but i need to change hyprland conf bindings to use uwsm you said. so wouldn't that screw up my backdoor?
+
+That is a very sharp catch. You're exactly right: if you hardcode uwsm app -- into your hyprland.conf, and then try to launch Hyprland without uwsm, those keybindings will fail because there is no uwsm session active to handle the "app" request.
+
+The solution is to use a variable for your launcher. This allows your config to be "smart" enough to work in both scenarios.
+
+1. The "Smart Launcher" Strategy
+In your hyprland.conf, you can define a variable at the top that detects if uwsm is running. If it isn't, it just runs the command normally.
+
+Add this to the top of your hyprland.conf:
+
+Ini, TOML
+# Detect if we are under a UWSM session
+$run = $(uwsm check active && echo "uwsm app --" || echo "")
+
+# Now use $run for all your bindings
+bind = $mainMod, Q, exec, $run kitty
+bind = $mainMod, B, exec, $run firefox
+
+# And for your autostarts
+exec-once = $run waybar
+exec-once = $run dunst
+Why this works:
+When using uwsm start: The variable $run becomes uwsm app --. Your command becomes uwsm app -- kitty.
+
+When launching directly: The check fails, $run becomes an empty string. Your command becomes kitty (which works perfectly).
+
+2. Dealing with Environment Variables
+This is the only other "backdoor" friction point. Since uwsm expects variables in ~/.config/uwsm/env, a manual launch might miss them (like your cursor size or toolkit scaling).
+
+The Fix: Keep your ~/.bash_profile (or ~/.zprofile) as the primary source of truth for variables. uwsm is smart enough to inherit your shell environment. If you export your variables in your profile, they will be available whether you launch via uwsm or manually.
+
+3. The "Emergency Exit" Keybind
+Since you are on a Framework and might be swapping between niri and Hyprland, I highly recommend adding a "Force Quit" bind that doesn't rely on uwsm just in case the session manager hangs (which is rare, but this is your backdoor!).
+
+Ini, TOML
+# A hard-coded exit that works even if uwsm is acting up
+bind = $mainMod SHIFT, M, exit, 
+4. Setting up the Profile Menu
+To make this easy when you're sitting at the TTY on your laptop, put this in your ~/.bash_profile:
+
+Bash
+if [[ -z $DISPLAY && $(tty) == /dev/tty1 ]]; then
+    echo "1) Hyprland (UWSM)"
+    echo "2) niri (UWSM)"
+    echo "3) Hyprland (Manual/Backdoor)"
+    echo "4) Stay in TTY"
+    read -p "Select: " choice
+
+    case $choice in
+        1) exec uwsm start hyprland-uwsm.desktop ;;
+        2) exec uwsm start niri-uwsm.desktop ;;
+        3) exec Hyprland ;;
+        *) ;;
+    esac
+fi
+Is it worth it?
+Given you have a 3-monitor desktop and a laptop, this setup is the "Goldilocks" zone. You get the stability and power management of uwsm for your daily driving, but you never lose the ability to "just run the compositor" if a systemd update goes sideways.
+
+Would you like me to help you draft the equivalent "Smart Launcher" logic for your niri config? (It's a bit different because niri uses KDL format).
+
+
+
+
+Gemini can make mistakes, so double-check it
+
+

@@ -1,0 +1,395 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+AI Mode
+All
+Videos
+Images
+Short videos
+More
+Sign in
+
+
+wofi vs rofi vs tofi vs hyprlauncher
+3 hours ago
+
+Choosing an app launcher for Wayland (especially on Hyprland) depends on your priority: visual customizability, extreme performance, or native ecosystem integration. 
+Quick Comparison (2026)
+Launcher 	Key Strength	Best For	Architecture
+Rofi (Wayland)	Versatility	Users wanting the classic, feature-rich X11 experience on Wayland.	C (Wayland fork)
+Wofi	Familiarity	Simple, GTK-based styling that is easy to theme with CSS.	GTK / C
+Tofi	Speed	Minimalists who want the fastest possible "single-frame" startup.	C / wlroots
+Hyprlauncher	Hyprland Native	Users who want a first-party, multipurpose tool designed for Hyprland.	C++ / Hypr-native
+Detailed Breakdown
+Rofi (Wayland)
+Description: A Wayland-native fork of the classic Rofi window switcher and dmenu replacement.
+Pros: Highly mature with a massive library of community-made scripts for everything from emoji pickers to Bluetooth menus. Performance is excellent, often reaching ~35ms startup times.
+Cons: Configuration can be complex compared to newer alternatives.
+Wofi
+Description: A GTK-based launcher inspired by Rofi, specifically built for wlroots compositors like Hyprland and Sway.
+Pros: Very easy to theme using standard CSS. It is the "classic" Wayland alternative that most beginners start with.
+Cons: Slower than newer competitors, with benchmarks showing around 85ms startup times. Some users consider it less maintained compared to more modern options.
+Tofi
+Description: An extremely fast, tiny, and simple dmenu/rofi replacement.
+Pros: Built for speed; when configured correctly, it can appear on screen within a single frame. It is highly minimalistic and focuses on text-based input/output.
+Cons: Lacks built-in features like icons or complex window switching out of the box, requiring more manual scripting for advanced use cases.
+Hyprlauncher
+Description: A "first-party" multipurpose launcher and picker developed as part of the Hypr ecosystem.
+Pros: Deeply integrated with Hyprland's dispatchers and rules. It is designed to be a versatile tool for the specific needs of Hyprland users.
+Cons: May use more RAM than minimal options like Tofi. 
+Recommendations
+For the "Raycast" experience: Look into Rofi or Walker for plugin support and extensibility.
+For absolute speed: Choose Tofi.
+For easy CSS ricing: Choose Wofi.
+For the Hyprland purist: Choose Hyprlauncher. 
+Here are comparisons of app launchers Rofi, Wofi, Tofi, and Hyprlauncher, detailing their Wayland integration and user experience.
+App launchers - Hyprland Wiki
+App launchers * Hyprlauncher. Hyprlauncher is a first-party multipurpose and versatile launcher / picker for Hyprland. See its usa...
+
+Hyprland Wiki
+What app launcher should i use? : r/hyprland - Reddit
+Comments Section * artwik22. • 3mo ago. Rofi just works for me, easy to use and rice. * leoVici9. • 3mo ago. Vicinae. * AK1174. • ...
+
+Reddit
+
+App launchers - Hyprland Wiki
+Wofi. Wofi is a GTK-based customizable launcher for wayland. SourceHut. Rofi (Wayland fork) Rofi, but with Wayland support. GitHub...
+
+Hyprland Wiki
+How To Use The Best Program Launcher | Best Dmenu or Rofi ...
+Tophi is an application launcher, similar to Rofi and Dmenu, primarily used with tiling window managers. It loads a menu with sele...
+
+YouTube
+
+wofi - A rofi inspired launcher for wlroots compositors - Ubuntu Manpage
+wofi is a rofi inspired menu program for wlroots compositors such as sway.
+
+Ubuntu Manpage
+Which application launcher would you suggest and why? : r/hyprland
+* suboxi. • 1y ago. Rofi: Docked with keyboard I use rofi that I launch with keyboard shortcuts. ... * THON1203. • 1y ago • Edited...
+
+Reddit
+
+
+
+
+
+How do I configure Rofi's Wayland fork for customization and script integration?
+
+What are some notable Rofi scripts available for Wayland?
+
+Compare wofi and tofi performance
+
+undefined
+undefined
+undefined
+19 sites
+Which application launcher would you suggest and why? : r/hyprland
+* suboxi. • 1y ago. Rofi: Docked with keyboard I use rofi that I launch with keyboard shortcuts. ... * THON1203. • 1y ago • Edited...
+
+Reddit
+
+Tofi, wofi, or rofi (wayland)? : r/hyprland - Reddit
+Tofi, wofi, or rofi (wayland)? I am using Hyprland (uwsm) and currently using tofi as my app launcher. One thing i know about usin...
+
+Reddit
+
+what's faster than wofi : r/hyprland - Reddit
+* gdmr458. • 2y ago. tofi https://github.com/philj56/tofi. * Grave_Master. • 2y ago. fuzzel. * TheAskerOfThings. • 2y ago. tofi. *
+
+Reddit
+
+Show all
+what is gtk? i'm using wayland and want something modern. is it relevant to me?
+3 hours ago
+
+GTK (formerly the GIMP Toolkit) is a free and open-source widget toolkit used by developers to create graphical user interfaces (GUIs). It is the foundation of the GNOME desktop environment and is widely used for major Linux applications like GIMP, Inkscape, and Firefox. 
+As a Wayland user in 2026, GTK is highly relevant and considered a modern choice, provided you are using its latest versions. 
+Is it Modern and Relevant for Wayland?
+Native Support: Modern GTK (GTK4 and GTK3) has built-in Wayland backends. By 2026, most major distributions like Fedora and Ubuntu have moved toward Wayland-only environments, and GTK remains a primary toolkit for these systems.
+Version Matters:
+GTK4: The current standard, optimized for performance with hardware acceleration (Vulkan/OpenGL) and deep Wayland integration.
+GTK3: Still widely used and fully functional on Wayland, though considered a "legacy" stable version as developers transition to GTK4.
+GTK2: Now largely EOL (End of Life) and lacks native Wayland support, requiring XWayland to run.
+Wayland Integration: As of late 2025/early 2026, GTK 4.20 introduced enhanced Wayland features, including improved tablet protocol support, better natural scrolling, and server-side key repeat handling. 
+Key Benefits for You
+Uniformity: If you use GNOME or a wlroots-based compositor (like Hyprland or Sway), GTK applications provide a consistent look and feel.
+Performance: Modern GTK uses hardware acceleration to ensure smooth animations and low-latency input, which matches the performance goals of Wayland.
+Ease of Use: Many modern Wayland-specific tools (like gtklock or carmenta emoji picker) are built with GTK4/Rust specifically to leverage Wayland's security and efficiency. 
+Potential Modern Downsides
+Theming Restrictions: GTK4 applications (specifically those using libadwaita) are harder to theme than older versions. They often ignore system-wide CSS themes to maintain developer-intended design consistency, which may frustrate users who want deep customization.
+Toolkit Conflicts: If you are on a Qt-based desktop (like KDE Plasma), GTK apps may sometimes have inconsistent file pickers or window decorations compared to your native Qt apps. 
+
+
+
+
+Compare GTK theming in GTK3 vs GTK4
+
+What are some popular GTK apps that integrate well with Wayland?
+
+Elaborate on libadwaita's impact on theming in GTK4
+
+undefined
+undefined
+undefined
+14 sites
+GTK 4.20 Released With Better Wayland Support, Rendering ...
+GTK 4.20 Released With Better Wayland Support, Rendering Enhancements. ... GTK 4.20 released on Friday as the newest version of th...
+
+Phoronix
+
+GTK2 being on life support in 2026 is kind of wild when you ...
+Other distros like Arch have well supported unofficial repos that still provide the GTK 2 package when it is needed. Debian does n...
+
+Hacker News
+Which version of GTK should I use? : r/gnome - Reddit
+As someone who have been working on a GTK4 app recently, I can tell you this: It depends on what kind of app you are planning to m...
+
+Reddit
+Show all
+so how does this relate to my question about launchers?
+3 hours ago
+
+In 2026, the "modernity" of a launcher is often defined by which graphics toolkit it uses to draw its interface on Wayland. This directly impacts how you theme it and how fast it feels.
+Here is how GTK and other toolkits relate to your specific launcher options:
+1. Wofi: The GTK Option 
+Toolkit: GTK3.
+Relevance: Because it uses GTK, Wofi is essentially a "web-lite" engine for your launcher. It uses CSS for all styling.
+Modernity Check: It is considered "modern" because it supports Wayland features like layer-shell (which lets it overlay properly on your desktop). However, because GTK is a heavy library, Wofi is generally the slowest of these four options. 
+2. Tofi: The "No-Toolkit" Option
+Toolkit: None (written in pure C using wlroots and Cairo).
+Relevance: Tofi avoids GTK entirely to achieve extreme speed. It doesn't have to load a massive library just to show a search bar.
+Modernity Check: This is the "modern minimalist" approach. It is significantly faster than Wofi, often appearing on screen in just 2ms. It is relevant if you want a launcher that feels instantaneous. 
+3. Hyprlauncher: The Hypr-Native Option 
+Toolkit: Hyprtoolkit.
+Relevance: Instead of using a general-purpose library like GTK, this uses a custom C++ toolkit built by the Hyprland team specifically for Wayland.
+Modernity Check: This is arguably the most modern for a Hyprland user. It uses a daemon architecture (running in the background) to ensure it opens faster than GTK-based launchers while still supporting animations and complex modules. 
+4. Rofi (Wayland Fork): The Hybrid 
+Toolkit: C / Cairo.
+Relevance: Like Tofi, it avoids the overhead of GTK but uses a more complex internal engine to support the hundreds of themes and scripts people have built over the years.
+Modernity Check: As of 2025/2026, the official Wayland support makes it a modern choice for those who need high functionality (like window switching) without the GTK "bulk". 
+Summary: Which should you care about?
+If you enjoy CSS styling and want an easy experience: Use the GTK-based Wofi.
+If you want the fastest possible Wayland native experience: Use the toolkit-free Tofi.
+If you want Hyprland ecosystem features (like math or unicode pickers): Use Hyprlauncher. 
+
+
+
+
+Show me some cool Wofi CSS styles
+
+How do I configure Hyprlauncher?
+
+Compare X11 vs Wayland
+
+undefined
+undefined
+undefined
+13 sites
+Rofi alternatives for Wayland: app launcher, window switcher ...
+Here we'll take a tour of some of the other options. Wofi – Rofi, but for Wayland? wofi 1.4.1 - Still cutting off icons. The name ...
+
+Mark Stosberg
+
+App launchers - Hyprland Wiki
+Wofi. Wofi is a GTK-based customizable launcher for wayland. SourceHut. Rofi (Wayland fork) Rofi, but with Wayland support. GitHub...
+
+Hyprland Wiki
+wofi - A rofi inspired launcher for wlroots compositors - Ubuntu Manpage
+DESCRIPTION. wofi is a rofi inspired menu program for wlroots compositors such as sway. It is intended to be highly customizable a...
+
+Ubuntu Manpage
+Show all
+hyprland uses wl-roots does it?
+3 hours ago
+
+Hyprland no longer uses the external wlroots library; it transitioned to a completely independent, in-house implementation as of its 0.42 release in July/August 2024. 
+Previously, Hyprland used a bundled (forked) version of wlroots. The creator, Vaxry, eventually rewrote all the necessary components in C++ to achieve better performance, fewer memory bugs, and greater control over development, creating its own rendering backend library called Aquamarine. 
+Key Points:
+Independent, not incompatible: While it doesn't rely on the library wlroots anymore, it still implements the protocols and functionality provided by it.
+Backward compatibility: This means that other Wayland tools and utilities that rely on the standard wlroots protocols (like screen capture tools or status bars) should still work with Hyprland.
+Reason for change: The move was made to enable "bleeding edge" features, improve stability, and avoid issues with the rapid, breaking changes in the upstream wlroots development. 
+
+
+
+
+undefined
+undefined
+undefined
+10 sites
+Hyprland has become independent, dropping wlroots. : r/linux - Reddit
+Key Changes * Integration of Protocol Implementations: Previously, Hyprland relied on external implementations of various protocol...
+
+Reddit
+
+Hyprland and the bundled wlroots - Vaxry's Blog
+Why not just use tagged wlroots?? Because Hyprland is aiming to be bleeding edge, offering users the newest features from wlroots.
+
+blog.vaxry.net
+
+Hyprland has become independent, dropping wlroots. - Reddit
+TackyGaming6. • 2y ago. hy Vaxry, what about apps that use wlroots like to the core libraries will they work without wlroots or sh...
+
+Reddit
+
+Show all
+what is cairo?
+3 hours ago
+
+In the context of your launcher search, Cairo is the engine that actually "paints" the pixels for the launcher's interface. It is a 2D graphics library used to draw vector-based shapes, text, and images. 
+How it relates to your launchers
+Rofi and Tofi: These use Cairo directly to draw their menus. This is why they can feel lighter and faster; they don't load a massive UI toolkit (like GTK or Qt) just to render a simple search box.
+Wofi: While Wofi is a GTK application, GTK itself used Cairo as its primary rendering engine for years. However, in 2026, modern toolkits (like GTK4) have largely replaced Cairo with faster, GPU-accelerated engines like Skia or native Vulkan/OpenGL renderers. 
+Is Cairo "Modern" in 2026?
+Cairo is often considered "legacy modern." It is extremely stable and produces high-quality, sharp text, but it has some drawbacks for a 2026 Wayland setup: 
+CPU-Heavy: Cairo is primarily a CPU-based renderer. It doesn't take full advantage of your graphics card (GPU) as well as newer libraries like Skia or the custom engines in Hyprland's ecosystem.
+Maintenance Status: By 2026, Cairo is largely in maintenance mode. Many high-performance projects, including Firefox and WebKitGTK, have moved away from it in favor of GPU-accelerated alternatives. 
+Bottom Line: If a launcher uses Cairo (like Tofi), it will be very lightweight and start instantly. If you want cutting-edge GPU features and animations, you may prefer launchers built with newer toolkits like GTK4 or Hyprlauncher's native backend. 
+
+
+
+
+What are some popular Skia-based alternatives to rofi or wofi?
+
+Explain the Hyprtoolkit in Hyprlauncher
+
+Give me a brief rundown of Skia
+
+undefined
+undefined
+undefined
+9 sites
+Cairo (graphics) - Wikipedia
+cairo (graphics) ... Cairo (stylized as cairo) is an open-source graphics library that provides a vector graphics-based, device-in...
+
+Wikipedia
+
+WebKitGTK 2.46 Uses Skia Rather Than Cairo, More CPU/GPU ...
+There are also other graphics improvements and more enhancements to come. Carlos noted that with WebKitGTK/WPEWebKit they are now ...
+
+Phoronix
+
+Cairo is in a maintenance-only mode. Nobody develops this ...
+Cairo is in a maintenance-only mode. Nobody develops this library anymore and it... | Hacker News. Hacker Newsnew | past | comment...
+
+Hacker News
+Show all
+don't want animations. want speed though. and flexibility, versatility, future-proofness. recommend pls
+3 hours ago
+
+For a setup that prioritizes speed, versatility, and future-proofness without the bloat of animations, the clear winner for 2026 is Rofi (Wayland Fork). 
+Recommendation: Rofi (Wayland Fork)
+While you initially compared it to others, Rofi remains the industry standard because it balances raw performance with unmatched flexibility. 
+Speed: It is highly optimized and noticeably faster than GTK-based launchers like Wofi. While Tofi is technically faster (appearing within a single frame), Rofi's performance is already well below the threshold of human perception for "instant".
+Versatility: This is Rofi's strongest suit. It is more than just an app launcher; it is a full-featured replacement for dmenu. You can use it for:
+Window switching across workspaces.
+Scripted menus for emojis, Wi-Fi, Bluetooth, or power management.
+Custom prompts for shell scripts, making it a Swiss-army knife for your workflow.
+Future-Proofness: In August 2025, Rofi released a major 2.0 update with native Wayland support, ensuring it remains the core choice for modern Linux desktops moving forward. 
+Comparison of Alternatives for Speed/Flexibility
+Feature 	Rofi (Wayland)	Tofi	Fuzzel
+Animation Status	None (Static)	None (Static)	None (Static)
+Startup Speed	Extremely Fast	Instant (Single Frame)	Very Fast
+Versatility	High (Apps, Windows, Scripts)	Low (Mostly Apps/dmenu)	Moderate (Apps/dmenu)
+Theming	Advanced (CSS-like)	Minimal/Text-based	Minimal
+Why not the others?
+Tofi: While it is the absolute speed king, it is often too "tiny" for high-versatility needs. It currently lacks support for icons in many modes and has fewer built-in scripting options compared to Rofi.
+Wofi: It is generally the slowest due to its GTK3 overhead and has a codebase that many consider less actively maintained than its rivals.
+Hyprlauncher: While highly native, it is often designed to showcase the "eye candy" and animations of the Hyprland ecosystem, which contradicts your preference for no animations. 
+Final Verdict: Use Rofi (Wayland fork). It gives you the speed of a native Wayland tool with the massive script library of a tool that has been the Linux standard for a decade. 
+
+
+
+
+How do you configure Rofi for custom scripts?
+
+How do you use Rofi to switch windows on Wayland, similar to dmenu?
+
+What are some advanced Rofi themes?
+
+undefined
+undefined
+undefined
+10 sites
+Rofi alternatives for Wayland: app launcher, window switcher and ...
+Fuzzel - the best among minimalist options. There are several options that focus on minimalism and speed: They can launch apps or ...
+
+Mark Stosberg
+
+App launchers - Hyprland Wiki
+App launchers * Hyprlauncher. Hyprlauncher is a first-party multipurpose and versatile launcher / picker for Hyprland. See its usa...
+
+Hyprland Wiki
+Which application launcher would you suggest and why?
+And btw pretty much all of these launchers have a dmenu mode so you can use it as a dmenu replacement as well) gradert1. • 1y ago.
+
+Reddit
+
+Show all
+what is dmenu?
+3 hours ago
+
+In the context of Linux launchers, dmenu is the "grandfather" of modern tools like Wofi, Rofi, and Tofi. Created by the Suckless.org project, it is a tiny, keyboard-driven utility that reads a list of items and lets you select one. 
+How dmenu Works
+The power of dmenu lies in its extreme simplicity: 
+Input (stdin): You pipe any list of text into it (e.g., ls | dmenu).
+The Menu: It pops up a thin bar at the top or bottom of your screen where you type to filter those items.
+Output (stdout): When you press Enter, it prints your selection back to the terminal. 
+Why It Matters to Your Choice
+The launchers you asked about earlier—Wofi, Rofi, and Tofi—all strive to be "dmenu-compatible". This is important for several reasons: 
+Scriptability: Because dmenu just handles text, people use it to build everything from Wi-Fi selectors to emoji pickers. Since newer launchers support dmenu-style input, they can run all these existing scripts.
+Speed: dmenu is not a background process; it starts only when you need it and exits immediately when you're done.
+The "dmenu_run" Script: dmenu typically ships with a script called dmenu_run that lists all programs in your $PATH, turning the generic menu into an application launcher. 
+dmenu vs. Wayland
+The original dmenu was built specifically for the X Window System (X11). While it can run on Wayland through XWayland, it often has issues with focus or keyboard grabbing. This is why Wayland-native alternatives like Wofi and Tofi were created—to replicate the dmenu workflow while using modern Wayland protocols. 
+
+
+
+
+undefined
+undefined
+undefined
+14 sites
+dmenu - ArchWiki
+dmenu. ... dmenu is a fast and lightweight dynamic menu for X. It reads arbitrary text from stdin, and creates a menu with one ite...
+
+ArchWiki
+enkore/j4-dmenu-desktop: A fast desktop menu - GitHub
+Features * speed. * conformance to the Desktop Entry Specification1 * daemon mode with --wait-on which parses desktop files ahead ...
+
+GitHub
+
+I think dmenu is a good example of this. It's a common ...
+Entering text will narrow the items to those matching the tokens in the input. dmenu_run is a script used by dwm(1) which lists pr...
+
+Hacker News
+Show all
+is rofi dmenu compatible? can i do something like ls | rofi?
+3 hours ago
+
+Yes, Rofi is fully dmenu compatible, but you must use a specific flag to enable that behavior.
+By default, running rofi will try to launch one of its built-in modes (like drun for applications). To make it act as a pipe-in/pipe-out tool like dmenu, you use the -dmenu flag. [1, 2, 4]
+How to use it
+To perform the action you mentioned, you would run:
+ls | rofi -dmenu [1, 4]
+This will open a Rofi window containing the files in your current directory. Once you select one and hit enter, Rofi will close and print that filename to your terminal. [4]
+Why this is powerful for your setup:
+Custom Scripts: You can pipe anything into it, such as a list of your SSH servers, a list of your music library, or a list of power options (Shutdown, Reboot). [1]
+Speed: Because you aren't loading the full application database (drun), it is incredibly fast. [4]
+Theming: Even when used in dmenu mode, Rofi will still use your custom themes and colors, keeping your system looking consistent. [2]
+Pro-Tip for Hyprland
+If you want to use it as a quick "run" command (similar to the original dmenu_run), you can use the built-in run mode:
+rofi -show run [2, 4]
+This lists all executables in your $PATH without needing to pipe anything manually. [2, 4]
+
+
+
+
+What rofi themes are popular and easy to configure?
+
+How does rofi's Wayland fork differ from the original dmenu?
+
+Are there rofi scripts for quick task management or note-taking?
+Ask anything
+
+
+

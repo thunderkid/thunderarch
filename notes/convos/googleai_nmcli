@@ -1,0 +1,378 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+AI Mode
+All
+Videos
+Forums
+Shopping
+More
+Sign in
+
+
+nmcli list connections show active
+The correct command to show active network connections using nmcli is:
+bash
+nmcli connection show --active
+Use code with caution.
+
+ 
+Key Details:
+Abbreviations: You can use shorter versions of the command for faster typing:
+nmcli con show --active
+nmcli con show -a
+nmcli c s -a
+Output: This command displays a table listing the NAME, UUID, TYPE, and DEVICE for all currently active connection profiles.
+Difference from nmcli connection show: Without the --active flag, the command lists all configured connection profiles, whether they are currently in use or not.
+Alternative Status Check: To see the status of network devices (interfaces) rather than the connection profiles, use:
+bash
+nmcli device status
+Use code with caution.
+
+ 
+
+
+
+
+Give an example of nmcli connection show --active output
+
+How can I activate a connection using nmcli?
+
+List all available Wi-Fi connections in the vicinity
+
+undefined
+undefined
+undefined
+8 sites
+Monitor Network Connections with nmcli - Delightly Linux
+Feb 4, 2024 — For example, Ubuntu Cinnamon uses NetworkManager, but Ubuntu Server does not, so Ubuntu Server cannot use nmcli. * systemctl statu...
+
+WordPress.com
+
+Get a list of network manager network connections with Bash?
+Apr 3, 2018 — * nmcli con is equivalent to nmcli connection , which makes for more concise commands. Matthias Braun. – Matthias Braun. 2020-09-1...
+
+Ask Ubuntu
+
+Manage network connections from the Linux command line ...
+Aug 8, 2020 — Make it active with the up command followed by the connection name (or the UUID): $ nmcli connection up ethernet-enp0s8 Connection...
+
+Opensource.com
+
+Show all
+in nmcli i want to show which wifi router of my eero network i'm connected to, and see what the signal strength is as a percentage
+To see which specific eero node you are connected to and its signal strength using nmcli, you can use the device wifi command with custom fields. 
+Commands to View Connection Details
+Show current connection only:
+To see just the active access point, its BSSID (MAC address), and signal strength percentage, run:
+bash
+nmcli -f IN-USE,BSSID,SSID,SIGNAL device wifi | grep '*'
+Use code with caution.
+
+Show all nearby nodes (detailed list):
+If you want to see all your eero nodes and compare their signal strengths:
+bash
+nmcli -f IN-USE,BSSID,SSID,SIGNAL,BARS device wifi
+Use code with caution.
+
+ 
+Identifying Your eero Node
+Since eero networks typically use the same SSID (network name) for every node, you must look at the BSSID column. 
+BSSID: This is the unique MAC address of the specific radio on the eero node you are currently talking to.
+SIGNAL: This column displays the signal strength as a percentage (0-100). 
+Limitations for 2026
+While nmcli provides the hardware address (BSSID), it does not show the "friendly name" you gave the node in the eero app (e.g., "Living Room eero"). To map a BSSID to a specific room, you may need to check the eero App under the "Devices" tab, where you can match the MAC address to the node name. 
+
+
+
+
+How can I tell which eero node my device is connected to using the BSSID?
+
+Explain the difference between BSSID and SSID
+
+undefined
+undefined
+undefined
+10 sites
+How to get wifi mac (BSSID) of router you are connected? - Super User
+Oct 28, 2022 — 2 Answers. ... For WLAN interfaces with modern (nl80211) drivers, run iw wlan0 link to see the physical layer information (includi...
+
+Super User
+How To Check WiFi Signal Strength From Commandline In ...
+Aug 23, 2024 — 1. Display WiFi Signal Strength using nmcli Command. nmcli is a command-line client for NetworkManager and is more modern and vers...
+
+OSTechNix
+
+How can I find the connection strength and status of my eeros?
+To check your eero's connection quality, take the following steps: * Open the eero app. * Tap Online at the top of the screen. * T...
+
+eero Help Center
+
+Show all
+it seems to be connecting to an eero node in my network that is far from being the strongest signal. how do i make it reconnect to the one with the strongest signal. seems it should be automatic.
+While mesh systems like eero are designed to handle this automatically through "Client Steering," the decision to switch (roam) is ultimately made by your device's WiFi driver. Linux often "clings" to a weak signal because the threshold to trigger a new search hasn't been met. 
+1. Manual Reconnect to the Best Node 
+To force an immediate reconnection to the strongest available eero node, you can trigger a rescan and then tell nmcli to connect to the specific BSSID (MAC address) of the node with the best signal. 
+Find the BSSID of the strongest node:
+bash
+nmcli -f IN-USE,BSSID,SIGNAL,SSID device wifi list | grep "Your_SSID_Name"
+Use code with caution.
+
+Connect directly to that BSSID:
+Identify the BSSID (e.g., AA:BB:CC:11:22:33) with the highest signal percentage and run:
+bash
+nmcli device wifi connect AA:BB:CC:11:22:33
+Use code with caution.
+
+ 
+2. Force a Fresh Scan & Auto-Selection
+If you don't want to specify a BSSID, you can force the system to drop the current weak connection and re-evaluate all nodes. It will typically pick the strongest one during the handshake. 
+bash
+nmcli device wifi rescan && nmcli device wifi connect "Your_SSID_Name"
+Use code with caution.
+
+3. Improving Automatic "Roaming"
+To make this process more automatic in the future, check these settings:
+Enable Client Steering: In the eero app, ensure "Client Steering" (found under Settings > Network Settings) is turned ON. This allows eero to actively encourage your device to move to a better node.
+Toggle WiFi: Often, simply cycling the interface is enough to trigger a roam to the nearest node:
+bash
+nmcli radio wifi off && nmcli radio wifi on
+Use code with caution.
+
+BSSID Locking (Caution): You can technically "lock" your device to a specific eero node by setting the 802-11-wireless.bssid property in your connection profile. However, this is generally discouraged for laptops, as you will lose connectivity entirely when you move to another room. 
+Summary of Commands
+Action 	Command
+List Strengths	nmcli -f BSSID,SIGNAL,SSID device wifi list
+Force Best Node	nmcli device wifi connect <BSSID_OF_STRONGEST>
+Quick Reset	nmcli radio wifi off && nmcli radio wifi on
+
+
+
+
+How can I check my client steering settings in the eero app?
+
+What are some advanced nmcli commands for WiFi roaming control?
+
+Tell me more about using BSSID locking
+
+undefined
+undefined
+undefined
+7 sites
+Why Doesn't My Device Connect to the Closest eero
+Why Doesn't My Device Connect to the Closest eero. In most cases, your devices will choose the best eero to connect to but sometim...
+
+eero Help Center
+Getting Devices on the "Best" Node - Discussion Topics
+Aug 9, 2022 — This would allow for the user to at least manually assign devices to load balance the network for static devices. The only work ar...
+
+eero Community
+
+Force NetworkManager to connect to 2.4Ghz - balena Forums
+Apr 2, 2021 — Screen Shot 2021-04-02 at 3.30.32 PM2354×1271 208 KB. barryjump April 2, 2021, 10:51pm 3. Update, for anyone else interested in do...
+
+Balena.io
+
+Show all
+where is it remembering which network to join? where is the list? some connection profile?
+In Linux, NetworkManager stores your saved Wi-Fi networks as Connection Profiles. These are simple text files that contain the SSID, security keys, and auto-connect settings.
+1. Where the files are stored
+On most distributions, these profiles are stored in a protected system directory:
+Path: /etc/NetworkManager/system-connections/
+Access: You need sudo (root) permissions to view them because they contain your Wi-Fi passwords in plain text or encrypted form.
+2. How to list them via command line
+You can view the list of saved profiles using nmcli:
+bash
+nmcli connection show
+Use code with caution.
+
+This list includes all saved networks, not just the active one.
+3. How to view the details of a specific profile
+If you want to see the specific settings for your eero network (such as whether it is set to auto-connect or if it is locked to a specific BSSID), run:
+bash
+nmcli connection show "Your_SSID_Name"
+Use code with caution.
+
+4. How the "Auto-Connect" logic works
+NetworkManager uses a specific property to decide whether to join a network automatically. You can check the priority of your networks with this command:
+bash
+nmcli -f NAME,UUID,AUTOCONNECT,AUTOCONNECT-PRIORITY connection show
+Use code with caution.
+
+AUTOCONNECT: If this is yes, the system will attempt to join this network whenever it is in range.
+AUTOCONNECT-PRIORITY: If you have multiple saved networks in the same area, NetworkManager will pick the one with the higher number.
+5. Managing the List
+To prevent a network from auto-connecting:
+nmcli connection modify "Your_SSID_Name" connection.autoconnect no
+To "forget" (delete) a network:
+nmcli connection delete "Your_SSID_Name"
+For more detailed technical documentation on how these profiles are structured, you can refer to the NetworkManager Project Documentation.
+
+
+
+my network name is "bugger's kingdom". sadly i set it up with an apostrophe. this causes it to have trouble recognizing it. in particular nmcli device wifi connect "bugger's kingom" doesn't work. i've tried all variants with escape sequences, but nothing works. suggestions?
+To connect to an SSID containing an apostrophe, you must navigate the "double parsing" of both the Linux shell (Bash/ZSH) and the nmcli internal parser.
+Since single quotes ' and double quotes " are often consumed by the shell before nmcli sees them, the most reliable methods in 2026 are:
+1. Use the BSSID (Recommended)
+The easiest way to bypass naming issues entirely is to connect using the MAC address of the eero node. This avoids all character escaping problems.
+Find the BSSID for your network:
+nmcli device wifi list | grep "bugger's kingdom"
+Connect using that BSSID:
+nmcli device wifi connect AA:BB:CC:11:22:33
+2. Double-Quote + Backslash Escape
+If you want to use the name, you must wrap the entire string in double quotes and use a backslash to escape the apostrophe so the shell doesn't interpret it as the start of a single-quoted string.
+bash
+nmcli device wifi connect "bugger\'s kingdom"
+Use code with caution.
+
+3. Use the Hex-Encoded SSID
+If your terminal continues to struggle with the character, you can provide the SSID in hex format. You can find the hex string by running:
+bash
+nmcli -f SSID-HEX,SSID device wifi list
+Use code with caution.
+
+Then connect using the hex string (no quotes needed):
+bash
+nmcli device wifi connect 6275676765722773206b696e67646f6d
+Use code with caution.
+
+4. Interactive Connection
+If the command line arguments are failing, use the interactive nmcli prompt. This bypasses shell argument parsing entirely:
+Type nmcli to enter the tool.
+Type dev wifi connect "bugger's kingdom" inside the prompt.
+5. Cleaning up the Saved Profile
+If you have an old, broken profile saved, it might be conflicting. Check your existing profiles and delete any that look incorrect:
+bash
+nmcli connection show
+nmcli connection delete "bugger's kingdom"
+Use code with caution.
+
+For more troubleshooting on SSID naming conventions, the NetworkManager Manual provides a full list of character escape sequences supported by the utility.
+
+
+
+when i use the ssid-hex, it says Parameter <thingigaveit> is neither SSID nor BSSID
+In 2026, nmcli handles hex inputs strictly. When you provide the hex-encoded SSID, you must explicitly prefix it with hex: so the parser knows it is not a literal string.
+Run the command as follows:
+bash
+nmcli device wifi connect hex:6275676765722773206b696e67646f6d
+Use code with caution.
+
+Why your previous attempt failed:
+Ambiguity: Without the hex: prefix, nmcli treats the long string of numbers and letters as a literal SSID name. Since no network is literally named "6275676...", it fails.
+The Apostrophe: By using the hex: prefix, you are passing the raw data to the network card, bypassing the shell's confusion over the apostrophe in "bugger's kingdom".
+If you still get an error:
+Verify the Hex: Ensure you have the exact hex string from your specific environment, as small differences in spacing or hidden characters in the SSID can change the hex. Get it fresh with:
+bash
+nmcli -f SSID-HEX,SSID device wifi list | grep "bugger"
+Use code with caution.
+
+Rescan: Sometimes the BSSID cache is stale. Force a refresh before connecting:
+bash
+nmcli device wifi rescan
+Use code with caution.
+
+For further details on how NetworkManager handles special character encoding, you can consult the NetworkManager.conf documentation.
+
+
+
+
+Show me how to view my connection profiles with more detail
+
+What do the fields in `nmcli device wifi list` mean?
+
+What are the benefits of using a mesh WiFi system like eero?
+same. now it says Parameter 'hex:thingigaveit' is neither SSID nor BSSID
+If nmcli is refusing the hex: prefix, it typically means your version of the tool expects the raw hex string directly but is failing because it's interpreting the string as a literal name rather than a hex-encoded SSID.
+To solve this for "bugger's kingdom" in 2026, use Method 1, which completely bypasses the SSID name.
+Method 1: The "Bulletproof" BSSID Method
+The BSSID is the hardware MAC address of the eero node. It has no special characters and never fails due to parsing errors.
+Find the BSSID for your network (it will look like AA:BB:CC:11:22:33):
+bash
+nmcli -f BSSID,SIGNAL,SSID device wifi list | grep "bugger"
+Use code with caution.
+
+Connect directly to that BSSID:
+bash
+nmcli device wifi connect AA:BB:CC:11:22:33
+Use code with caution.
+
+Method 2: Manual Profile Creation
+If the device wifi connect command keeps failing because of the apostrophe, you can manually create a connection profile. This defines the SSID exactly as it should be in the configuration file. 
+Run this command (replace YOUR_PASSWORD with your actual Wi-Fi password): 
+bash
+nmcli connection add type wifi ifname wlan0 con-name "eero-home" ssid "bugger's kingdom" -- wifi-sec.key-mgmt wpa-psk wifi-sec.psk "YOUR_PASSWORD"
+Use code with caution.
+
+Note: We use con-name "eero-home" to give the profile a simple nickname that doesn't have an apostrophe, making it easy to manage later.
+Once added, bring it up:
+bash
+nmcli connection up eero-home
+Use code with caution.
+
+Method 3: Use the TUI (Graphical-ish)
+If the command line is still fighting you, use the built-in text user interface. It handles special characters and escaping automatically:
+Run: nmtui
+Select "Activate a connection".
+Find bugger's kingdom in the list and press Enter.
+Enter your password when prompted. 
+Summary for 2026
+Avoid using hex if the hex: prefix is being rejected; your specific nmcli build may have different SSID-HEX handling.
+BSSID connection is the most reliable way to handle eero mesh nodes specifically, as it also allows you to pick the strongest node manually.
+Ensure Client Steering is enabled in your eero app to help your device roam better in the future. 
+
+
+
+
+undefined
+undefined
+
+5 sites
+nmcli: NetworkManager Reference Manual
+Otherwise, the connection is system-wide, which is the default. ... set to yes when connecting for the first time to an AP not bro...
+
+www.networkmanager.dev
+Connecting to WiFi Network with Apostrophe in SSID (NMCLI)
+Mar 16, 2023 — krackout21. • 3y ago. You can try tab-completion, it works on my setup. After typing. nmcli dev wifi connect Nam press tab key to ...
+
+Reddit
+Auto-connect to hidden wifi network Ubuntu 20.04
+Mar 12, 2022 — 3 Answers * Make sure that your SSID is hidden. * Start your laptop or PC for that matter and go to the Wi-Fi settings. * Right fr...
+
+Ask Ubuntu
+Show all
+problem with the bssid method is that it likely connects to a weaker node than is available.
+To solve the "weaker node" problem while still bypassing the apostrophe issue, you should use the BSSID method but target only the strongest node. In a mesh system like eero, each node has its own unique BSSID, even though they share the same SSID name.
+1. Identify the Strongest eero Node
+Run this command to see all eero nodes, sorted by signal strength (highest at the top):
+bash
+nmcli -f SIGNAL,BSSID,SSID device wifi list --rescan yes | sort -rn
+Use code with caution.
+
+2. Connect to the Top BSSID
+Look at the top line where the SSID is bugger's kingdom. Take that specific BSSID (e.g., 00:1A:2B:3C:4D:5E) and connect:
+bash
+nmcli device wifi connect 00:1A:2B:3C:4D:5E
+Use code with caution.
+
+Because you are using a hardware MAC address (BSSID), nmcli will not look at the SSID name at all, completely avoiding the apostrophe error.
+3. Make it Automatic (The "Signal Threshold" Fix)
+If your Linux device keeps "sticking" to a weak node as you move around, you can configure the connection profile to be more aggressive. First, find your profile name (usually bugger's kingdom or what you named it in nmtui):
+bash
+nmcli connection show
+Use code with caution.
+
+Then, set a Background Scan Threshold. This tells NetworkManager to look for a better node if the current signal drops below a certain percentage (e.g., 65%):
+bash
+nmcli connection modify "bugger's kingdom" 802-11-wireless.powersave 2
+nmcli connection modify "bugger's kingdom" 802-11-wireless.bgscan-threshold 65
+Use code with caution.
+
+4. Use the eero App to Confirm
+To verify you are now on the correct node, check the eero App. It will show your device's current connection status and which specific eero it is talking to. If the app shows a "Great" connection but your Linux signal is low, ensure Client Steering is toggled ON in the eero app settings.
+
+
+
+Ask anything
+
+
+AI Mode response is ready
