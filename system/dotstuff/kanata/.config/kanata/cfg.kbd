@@ -3,11 +3,10 @@
 )
 
 (defsrc
-  a s d f   j k l ;
+  a s d f   h i j k l ;
   caps
 )
 
-;; Define variables for timing to make it easy to tweak
 (defvar
   tap-time 200
   hold-time 200
@@ -15,27 +14,27 @@
 
 (defalias
   ;; Left hand mods
-  met_d (tap-hold-release $tap-time $hold-time d lmet)
-  alt_s (tap-hold-release $tap-time $hold-time s lalt)
   ctl_a (tap-hold-release $tap-time $hold-time a lctl)
+  alt_s (tap-hold-release $tap-time $hold-time s lalt)
+  met_d (tap-hold-release $tap-time $hold-time d lmet)
   sft_f (tap-hold-release $tap-time $hold-time f lsft)
 
-  ;; Right hand mods
+  ;; Right hand mods (Note: these are the 'tapped' keys for the default layer)
   sft_j (tap-hold-release $tap-time $hold-time j rsft)
   met_k (tap-hold-release $tap-time $hold-time k rmet)
   alt_l (tap-hold-release $tap-time $hold-time l ralt)
   ctl_sc (tap-hold-release $tap-time $hold-time ; rctl)
 
-  ;; Layer Toggle (Caps Lock to Nav Layer)
-  nav (layer-toggle nav-layer)
+  ;; Caps Lock: Tap for Esc, Hold for Nav Layer
+  cap_nav (tap-hold $tap-time $hold-time esc (layer-toggle nav-layer))
 )
 
 (deflayer default
-  @ctl_a  @alt_s  @met_d  @sft_f    @sft_j  @met_k  @alt_l  @ctl_sc
-  @nav
+  @ctl_a  @alt_s  @met_d  @sft_f    h  i  @sft_j  @met_k  @alt_l  @ctl_sc
+  @cap_nav
 )
 
 (deflayer nav-layer
-  _       _       _       _         left    down    up      right
+  _       _       _       _         bspc up  left  down  right del
   _
 )
