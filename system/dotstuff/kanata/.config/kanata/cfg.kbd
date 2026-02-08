@@ -3,8 +3,10 @@
 )
 
 (defsrc
-  a s d f   h i j k l ;
-  caps
+  u i o
+  a s d f   h j k l ;
+  m , .
+  caps spc
 )
 
 (defvar
@@ -19,22 +21,26 @@
   met_d (tap-hold-release $tap-time $hold-time d lmet)
   sft_f (tap-hold-release $tap-time $hold-time f lsft)
 
-  ;; Right hand mods (Note: these are the 'tapped' keys for the default layer)
+  ;; Right hand mods
   sft_j (tap-hold-release $tap-time $hold-time j rsft)
   met_k (tap-hold-release $tap-time $hold-time k rmet)
   alt_l (tap-hold-release $tap-time $hold-time l ralt)
   ctl_sc (tap-hold-release $tap-time $hold-time ; rctl)
 
-  ;; Caps Lock: Tap for Esc, Hold for Nav Layer
-  cap_nav (tap-hold $tap-time $hold-time esc (layer-toggle nav-layer))
+  ;; Spacebar: Optimized for fast typing
+  spc_nav (tap-hold-press 150 200 spc (layer-toggle nav-layer))
 )
 
 (deflayer default
-  @ctl_a  @alt_s  @met_d  @sft_f    h  i  @sft_j  @met_k  @alt_l  @ctl_sc
-  @cap_nav
+  u i o
+  @ctl_a  @alt_s  @met_d  @sft_f    h  @sft_j  @met_k  @alt_l  @ctl_sc
+  m , .
+  esc @spc_nav
 )
 
 (deflayer nav-layer
-  _       _       _       _         bspc up  left  down  right del
-  _
+  pgup up pgdn
+  _       _       _       _         bspc left  down  right del
+  home _ end
+  _   _
 )
