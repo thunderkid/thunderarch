@@ -12,4 +12,4 @@ stow systemd      (stow -nv systemd     to see what it will do beforehand)
 	for ~/dotfiles/systemd/.config/systemd/user/kanata.service
 
 systemctl --user daemon-reload       for after changing location of some service file
-systemctl --user enable --now kanata.service
+systemctl --user enable --now kanata.service       # this should go into some sort of startup script

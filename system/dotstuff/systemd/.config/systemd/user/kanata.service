@@ -1,0 +1,14 @@
+[Unit]
+Description=Kanata keyboard remapper
+# If it restarts 3 times within 30 seconds, stop trying.
+StartLimitIntervalSec=30
+StartLimitBurst=3
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/kanata --cfg %h/.config/kanata/config.kbd
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target
