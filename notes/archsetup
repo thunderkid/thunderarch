@@ -8,8 +8,22 @@ fonts: needed nerdfonts i think for terminal. toff2 or something variant
 
 
 kanata:
+move kanata executable to /usr/bin/kanata       (needs to be downloaded from https://github.com/jtroo/kanata/releases/download/v1.11.0/linux-binaries-x64.zip)
+
 stow systemd      (stow -nv systemd     to see what it will do beforehand)
 	for ~/dotfiles/systemd/.config/systemd/user/kanata.service
+stow kanata
 
 systemctl --user daemon-reload       for after changing location of some service file
 systemctl --user enable --now kanata.service       # this should go into some sort of startup script
+
+
+Stuff installed (maybe automatically)
+dhclient
+iwd
+man-db
+man-pages
+networkmanager
+openssh
+sudo
+vim
