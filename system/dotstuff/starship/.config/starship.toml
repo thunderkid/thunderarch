@@ -1,0 +1,178 @@
+format = """
+[](timebg)\
+$time\
+$cmd_duration\
+$os\
+$username\
+[](fg:timebg bg:langbg)\
+$c\
+$elixir\
+$elm\
+$golang\
+$gradle\
+$haskell\
+$java\
+$julia\
+$nodejs\
+$nim\
+$rust\
+$scala\
+$python\
+$docker_context\
+$conda\
+[](fg:langbg bg:gitbg)\
+$git_branch\
+$git_status\
+[](fg:gitbg bg:dirbg)\
+$directory\
+[](fg:dirbg)\
+$line_break$character
+"""
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+palette = "thunder_cool"
+
+[palettes.thunder_cool]
+timebg = "#1C3A5E"
+timefg = "#8DFB02"
+langbg = "#339999"
+langfg = "#FFFFFF"
+gitbg =  "#FCF392"
+gitfg =  "#1C3A5E"
+dirbg =  "#3876F0"
+dirfg =  "#E4E4E4"
+errorfg = "#FF0000"
+
+[line_break]
+disabled = false
+
+[character]
+success_symbol = '[](bold fg:timefg)'
+error_symbol = "[✗](fg:errorfg)"
+
+# show time and (for long-running things) duration
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:timebg fg:timefg"
+format = '[🕑 $time ]($style)'
+
+[cmd_duration]
+disabled = false
+style = "bg:timebg fg:timefg"
+format = '[ ⏱  $duration ]($style)'
+
+# You can also replace your username with a neat symbol like   or disable this
+# and use the os module below
+[username]
+show_always = false
+style_user = "bg:timebg fg:timefg" 
+style_root = "bg:timebg fg:timefg"
+format = '[$user ]($style)'
+disabled = false
+
+# An alternative to the username module which displays a symbol that
+# represents the current operating system
+[os]
+style = "bg:timebg fg:timefg"
+disabled = true # Disabled by default
+
+[directory]
+style = "bg:dirbg fg:dirfg"
+format = "[ $path ]($style)"
+truncation_length = 4
+truncate_to_repo = false
+fish_style_pwd_dir_length = 0
+#truncation_length = 6
+truncation_symbol = "…/"
+
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = " 󰈙 "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important 󰈙 " = " 󰈙 "
+
+# git information block
+[git_branch]
+symbol = ""
+style = "bg:gitbg fg:gitfg"
+format = '[ $symbol $branch ]($style)'
+#format = '[ $symbol ]($style)'
+
+[git_status]
+style = "bg:gitbg fg:gitfg"
+format = '[$all_status $ahead_behind ]($style)'
+stashed = ''
+
+# language and docker info block
+[docker_context]
+style = "bg:langbg fg:langfg"
+symbol = " "
+#format = '[ $symbol $context ]($style)'
+format = '[ $symbol ]($style)'
+
+[c]
+style = "bg:langbg fg:langfg"
+symbol = " "
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[golang]
+style = "bg:langbg fg:langfg"
+symbol = " "
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[haskell]
+style = "bg:langbg fg:langfg"
+symbol = " "
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[java]
+style = "bg:langbg fg:langfg"
+symbol = " "
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[julia]
+symbol = " "
+style = "bg:langbg fg:langfg"
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:langbg fg:langfg"
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[rust]
+style = "bg:langbg fg:langfg"
+symbol = ""
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[scala]
+style = "bg:langbg fg:langfg"
+symbol = " "
+#format = '[ $symbol ($version) ]($style)'
+format = '[ $symbol ]($style)'
+
+[python]
+style = "bg:langbg fg:langfg"
+symbol = "\ue606"
+format = '[ $symbol ]($style)'
+
+[conda]
+style = "bg:langbg fg:langfg"
+format = '[ $symbol$environment ]($style)'
