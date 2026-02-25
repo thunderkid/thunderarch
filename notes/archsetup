@@ -27,3 +27,7 @@ networkmanager
 openssh
 sudo
 vim
+
+
+For clipboard:
+wl-clipboard         then "+yy in nvim copies line to clipboard

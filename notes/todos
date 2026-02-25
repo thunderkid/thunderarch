@@ -1,13 +1,15 @@
-niri test
-uwsm
-stow test
-github cli
-brave test
-kanata test
-git repos for laptop
-
+x niri test
+x uwsm (universal wayland session manager. but recommended not with hyprland)
+x stow test
+x brave test
+x kanata test
+x git repos for laptop
 
 my own wifi hotspot list, eero mac
 chrome tab max cpu in waybar
 
+github cli
 cliphist or copyq 
+
+
+stow bashrc etc
