@@ -31,3 +31,8 @@ vim
 
 For clipboard:
 wl-clipboard         then "+yy in nvim copies line to clipboard
+
+and stuff via pacman:
+github-cli
+
+network: because of apostrophe in network name, used nmtui instead of just nmcli to select line.
