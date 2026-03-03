@@ -1,0 +1,577 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+i want to update bios on a framework 13 laptop. intel ultra 7. what's best approach?
+
+Gemini said
+Updating the BIOS on your Framework 13 (Intel Core Ultra Series 1) is fairly straightforward, but the "best" approach depends on whether you're running Windows or Linux.
+
+As of early 2026, the current stable version for your model is typically 3.06 (though you should always check the Framework BIOS page for newer releases).
+
+⚡ Essential Pre-flight Checklist
+Before starting any of the methods below:
+
+Plug in your charger: The update will likely refuse to start (or could fail catastrophically) if you are on battery power.
+
+Check your current version: Restart and tap F2 to enter BIOS and see your version.
+
+Note: Some updates (like 3.06) require you to be on a specific previous version (like 3.04) first. If you are far behind, you may need to update in steps.
+
+Disable BitLocker: If you are on Windows, suspend BitLocker protection before starting to avoid being locked out.
+
+🛠️ Method 1: Windows (The Easiest)
+If you have Windows installed, this is the most seamless "double-click and done" method.
+
+Download the Windows Installer (.exe) from the Framework support site.
+
+Run the .exe as an Administrator.
+
+Click Yes to the reboot prompt.
+
+Do not touch the laptop while the progress bar moves. It will reboot automatically once finished.
+
+Important: For the Ultra Series, you may need to run the installer a second time after the reboot to update the Retimer firmware (which controls your ports).
+
+🐧 Method 2: Linux (The Recommended)
+Framework has excellent Linux support. You have two main paths:
+
+Option A: LVFS (The Pro Way)
+Most modern distros (Ubuntu, Fedora, Mint) support the Linux Vendor Firmware Service.
+
+Open your terminal and run:
+
+Bash
+fwupdmgr refresh
+fwupdmgr get-updates
+fwupdmgr update
+If an update is available, follow the prompts and reboot.
+
+Option B: EFI Shell (The "Universal" Way)
+Use this if LVFS isn't working or if you prefer a "clean" update outside the OS.
+
+Download the EFI Shell Update (.zip).
+
+Format a USB drive to FAT32.
+
+Extract the contents of the zip directly to the root of the USB drive.
+
+Plug the USB into your Framework, reboot, and tap F12 repeatedly.
+
+Select the USB drive. The startup.nsh script should run automatically and begin the update.
+
+⚠️ Troubleshooting Common Issues
+Black Screen: During the update, the screen may go black for 1–2 minutes. This is normal. Do not force power off.
+
+Ports not working after update: If a port stops recognizing devices, shut down the laptop, unplug the power, wait 90 seconds, and then plug back in and boot. This resets the PD (Power Delivery) controllers.
+
+"Security Violation" on EFI Update: If the USB won't boot, you may need to enter BIOS (F2) and temporarily disable Secure Boot.
+
+Would you like me to find the direct download link for the latest BIOS version for your specific processor?
+
+You said
+ok, i'm on arch but getting fwupdmgr doesn't exist.
+
+Gemini said
+In the world of Arch, you usually have to bring your own tools! fwupd (the package that provides fwupdmgr) isn't installed by default.
+
+Since you're on a Core Ultra 7 (Series 1), you’re in a good spot because Framework has been pushing hard for "stable" LVFS support for your specific generation.
+
+1. Install the tools
+Open your terminal and grab the necessary packages:
+
+Bash
+sudo pacman -S fwupd
+2. Configure for Framework
+Once installed, you need to start the daemon and refresh the database. Because Framework sometimes keeps newer BIOS versions in a "testing" state before full stable release, you might need to enable the testing remote if the update doesn't show up immediately.
+
+Start the service:
+
+Bash
+sudo systemctl start fwupd
+Refresh the metadata:
+
+Bash
+fwupdmgr refresh --force
+Check for the BIOS:
+
+Bash
+fwupdmgr get-updates
+[!TIP]
+If no BIOS update is found: Framework often lists Ultra Series updates in the "testing" channel first. You can enable it with:
+fwupdmgr enable-remote lvfs-testing
+Then run the refresh again.
+
+3. Apply the Update
+If it finds the update:
+
+Plug in your charger.
+
+Run: fwupdmgr update
+
+Type y to agree to the reboot.
+
+Arch will schedule the update. When you reboot, you'll see a black screen with a progress bar. Do not power off.
+
+🛠️ The "Arch Manual" Fallback (EFI Shell)
+If fwupd gives you trouble (Arch can be picky with EFI partition mounting), the EFI Shell method is the most "bulletproof" for Linux users:
+
+Grab a USB drive and format it to FAT32.
+
+Download the Linux/Other (EFI Shell) zip from the Framework Ultra 7 Support Page.
+
+Unzip everything to the USB.
+
+Reboot, tap F12, select the USB.
+
+It will launch a script. It might update the Retimers first, reboot, and then you'll need to boot from the USB again to finish the actual BIOS.
+
+Would you like me to check if there is a specific BIOS version number (like 3.05 or 3.06) you should be looking for right now?
+
+You said
+i've got bios 3.06. Running with lvfs-testing gave this. is there another actual bios update available, or just random crap? is it therefore worth actually updating?
+
+Successfully enabled and refreshed remote
+
+[adrian@macbookarch ~]$ fwupdmgr get-updates
+
+Devices with no available firmware updates:
+
+ • Internal SPI Controller (BIOS)
+
+ • KEK CA
+
+ • Laptop Webcam Module (2nd Gen)
+
+ • PCH SPI Controller
+
+ • WD BLACK SN850X 1000GB
+
+ • Windows UEFI CA
+
+ • frame.work-LaptopADLDB
+
+ • frame.work-LaptopADLKEK
+
+Devices with the latest available firmware version:
+
+ • Fingerprint Sensor
+
+ • Intel Management Engine
+
+ • System Firmware
+
+ • UEFI CA
+
+ • UEFI Device Firmware
+
+ • UEFI Device Firmware
+
+Framework Laptop 13 (Intel Core Ultra Series 1)
+
+│
+
+└─UEFI dbx:
+
+  │   Device ID:          362301da643102b9f38477387e2193e57abaa590
+
+  │   Summary:            UEFI revocation database
+
+  │   Current version:    20230501
+
+  │   Minimum Version:    20230501
+
+  │   Vendor:             Microsoft (UEFI:Microsoft)
+
+  │   Install Duration:   1 second
+
+  │   GUIDs:              f8ba2887-9411-5c36-9cee-88995bb39731 ← UEFI\CRT_A1117F516A32CEFCBA3F2D1ACE10A87972FD6BBE8FE0D0B996E09E65D802A503&ARCH_X64
+
+  │                       d07ff664-b0e1-5f4e-a723-d7fbcbfcb94f ← UEFI\CRT_3CD3F0309EDAE228767A976DD40D9F4AFFC4FBD5218F2E8CC3C9DD97E8AC6F9D&ARCH_X64
+
+  │                       f35e120a-eb92-570d-8d38-78aa8ffdeebe ← UEFI\CRT_AD53C146418710CD810BE527FE414C8EC093BE04CE92CABBF11E7A96E4B53B4D&ARCH_X64
+
+  │   Device Flags:       • Internal device
+
+  │                       • Updatable
+
+  │                       • Supported on remote server
+
+  │                       • Needs a reboot after installation
+
+  │                       • Device is usable for the duration of the update
+
+  │                       • Only version upgrades are allowed
+
+  │                       • Signed Payload
+
+  │                       • Can tag for emulation
+
+  │
+
+  ├─Secure Boot dbx Configuration Update:
+
+  │     New version:      20250902
+
+  │     Remote ID:        lvfs
+
+  │     Release ID:       130035
+
+  │     Summary:          UEFI Secure Boot Forbidden Signature Database
+
+  │     Variant:          x64
+
+  │     License:          Proprietary
+
+  │     Size:             24.1 kB
+
+  │     Created:          2025-09-02 00:00:00
+
+  │     Urgency:          High
+
+  │       Tested:         2026-02-13 00:00:00
+
+  │       Distribution:   ubuntu 25.10
+
+  │       Old version:    20230501
+
+  │       Version[fwupd]: 2.0.17
+
+  │       Tested:         2025-12-05 00:00:00
+
+  │       Distribution:   fedora 42 (workstation)
+
+  │       Old version:    20250507
+
+  │       Version[fwupd]: 2.0.17
+
+  │       Tested:         2025-11-10 00:00:00
+
+  │       Distribution:   fedora 43 (kde)
+
+  │       Old version:    20230501
+
+  │       Version[fwupd]: 2.0.16
+
+  │     Vendor:           Linux Foundation
+
+  │     Duration:         1 second
+
+  │     Release Flags:    • Trusted metadata
+
+  │                       • Is upgrade
+
+  │                       • Tested by trusted vendor
+
+  │     Description:
+
+  │     This updates the list of forbidden signatures (the "dbx") to the latest release from Microsoft.
+
+  │
+
+  │     Some insecure versions of the IGEL bootloader were added, due to a security vulnerability that allowed an attacker to bypass UEFI Secure Boot.
+
+  │     Issue:            CVE-2025-47827
+
+  │     Checksum:         7178302fa23fcb875e7540900e299fb30a76758663efb7e1c56edc25cd3f316a
+
+  │
+
+  ├─Secure Boot dbx Configuration Update:
+
+  │     New version:      20250507
+
+  │     Remote ID:        lvfs
+
+  │     Release ID:       115586
+
+  │     Summary:          UEFI Secure Boot Forbidden Signature Database
+
+  │     Variant:          x64
+
+  │     License:          Proprietary
+
+  │     Size:             24.0 kB
+
+  │     Created:          2025-01-17 00:00:00
+
+  │     Urgency:          High
+
+  │       Tested:         2025-10-17 00:00:00
+
+  │       Distribution:   fedora 42 (workstation)
+
+  │       Old version:    20230501
+
+  │       Version[fwupd]: 2.0.16
+
+  │       Tested:         2025-06-11 00:00:00
+
+  │       Distribution:   fedora 42 (workstation)
+
+  │       Old version:    20241101
+
+  │       Version[fwupd]: 2.0.11
+
+  │     Vendor:           Linux Foundation
+
+  │     Duration:         1 second
+
+  │     Release Flags:    • Trusted metadata
+
+  │                       • Is upgrade
+
+  │                       • Tested by trusted vendor
+
+  │     Description:
+
+  │     This updates the list of forbidden signatures (the "dbx") to the latest release from Microsoft.
+
+  │
+
+  │     Some insecure versions of BiosFlashShell and Dtbios by DT Research Inc were added, due to a security vulnerability that allowed an attacker to bypass UEFI Secure Boot.
+
+  │     Issues:           806555
+
+  │                       CVE-2025-3052
+
+  │     Checksum:         40d3a4630619b83026f66bc64d97a582bbd9223ad53aa3f519ff5e2121d11ca6
+
+  │
+
+  └─Secure Boot dbx Configuration Update:
+
+        New version:      20241101
+
+        Remote ID:        lvfs
+
+        Release ID:       105821
+
+        Summary:          UEFI Secure Boot Forbidden Signature Database
+
+        Variant:          x64
+
+        License:          Proprietary
+
+        Size:             15.1 kB
+
+        Created:          2025-01-17 00:00:00
+
+        Urgency:          High
+
+          Tested:         2025-10-31 00:00:00
+
+          Distribution:   ubuntu 24.04
+
+          Old version:    20230501
+
+          Version[fwupd]: 1.9.28
+
+        Vendor:           Linux Foundation
+
+        Duration:         1 second
+
+        Release Flags:    • Trusted metadata
+
+                          • Is upgrade
+
+        Description:
+
+        This updates the list of forbidden signatures (the "dbx") to the latest release from Microsoft.
+
+
+
+        An insecure version of Howyar's SysReturn software was added, due to a security vulnerability that allowed an attacker to bypass UEFI Secure Boot.
+
+        Issues:           529659
+
+                          CVE-2024-7344
+
+        Checksum:         093e6913dfecefbdaa9374a2e1caee7bf7e74c7eda847624e456e344884ba5f6
+
+
+
+[adrian@macbookarch ~]$
+
+Gemini said
+The short answer is: No, there is no actual BIOS (System Firmware) update available for you right now.
+
+What you are seeing is the "random crap" (technically important, but not a BIOS update). Specifically, fwupdmgr is finding updates for your UEFI dbx (Revocation Database).
+
+🔍 What are these updates?
+The dbx is essentially a "blacklist" stored in your motherboard's NVRAM. It tells Secure Boot which specific bootloaders are no longer trusted because they have security holes (like the CVEs mentioned in your output: CVE-2025-47827, etc.).
+
+Your BIOS version: Remains at 3.06.
+
+The update: Simply adds a few more "bad" signatures to that blacklist so hackers can't use old, broken bootloaders to bypass your security.
+
+🤔 Is it worth updating?
+On Arch, it’s a "nice to have" but not critical unless you are deeply concerned about physical-access security or are dual-booting with Windows.
+
+Pros:
+
+It patches known Secure Boot bypass vulnerabilities.
+
+It keeps your system compliant with the latest security standards.
+
+Cons:
+
+Risk of Brick (Low but real): Updating the dbx involves writing to the motherboard's NVRAM. If the NVRAM is full or the write fails, it can—in rare cases—cause the system to fail to boot or make it difficult to enter BIOS.
+
+Reboot required: It’s a tiny update (24kB), but it still requires a full restart to commit the changes to the hardware.
+
+💡 My Recommendation
+If your Framework is running perfectly on 3.06, you can safely ignore these.
+
+However, if you want your fwupdmgr output to be clean, you can run the update. It takes about 1 second to "install" and will apply the next time you restart. Just ensure your battery is charged, as even a tiny NVRAM write is safer on wall power.
+
+Would you like me to show you how to mask these specific updates so they stop showing up in your terminal?
+
+You said
+ok, and should I now turn off lvfs-testing as I was hoping it might give me something after 3.06, but that didn't work out.
+
+Gemini said
+Yes, you should definitely turn it off.
+
+Since you're already on 3.06, there is currently no newer BIOS for the Intel Core Ultra 7 (Series 1) even in the testing channel. Leaving lvfs-testing enabled on a rolling release like Arch just invites "beta-quality" firmware for other components (like your fingerprint reader or SSD) that you might not actually want to risk your stability on.
+
+🛡️ How to disable it
+Run this in your terminal:
+
+Bash
+fwupdmgr disable-remote lvfs-testing
+This keeps the "Stable" remote active but stops the system from looking for experimental updates.
+
+📅 Current State of the Ultra 7
+As of early 2026, 3.06 is the definitive stable version for your hardware. It was a significant update because it introduced the Framework EC device and fixed the OPAL drive bug (where some SSDs would just disappear on reboot).
+
+The next major update for your generation is expected to focus on fine-tuning the NPU (Neural Processing Unit) and further power efficiency tweaks, but Framework is quite conservative with BIOS releases—if they haven't pushed it to testing yet, it's not ready for daily use.
+
+📓 Summary Checklist
+BIOS 3.06: You're fully up to date.
+
+dbx Updates: These are just security "blacklists." You can run fwupdmgr update to clear them, or ignore them safely.
+
+lvfs-testing: Disable it to stay on the "Happy Path" of stability.
+
+Since you're on Arch, would you like me to show you how to set up a systemd timer so that fwupd checks for stable updates automatically in the background once a week?
+
+You said
+sure
+
+Gemini said
+To automate this on Arch, you don't actually need to write any custom scripts. The fwupd package already provides a built-in timer that handles the background metadata refresh.
+
+Here is how you set it up to keep your system aware of new stable updates without you having to manually check.
+
+🕒 Enable the fwupd-refresh Timer
+This timer runs a service that downloads the latest metadata from LVFS (the stable channel) so that when you do run fwupdmgr get-updates, the information is already there and ready.
+
+Enable and start the timer:
+
+Bash
+sudo systemctl enable --now fwupd-refresh.timer
+Verify it's scheduled:
+
+Bash
+systemctl list-timers --all | grep fwupd
+[!NOTE]
+By default, this runs once every 24 hours. It won't install anything automatically (which is good—you don't want your BIOS updating while you're in the middle of a project), but it will ensure your local database is current.
+
+🛠️ The "Arch Way" (Optional): Update Notifications
+If you want to be notified in your terminal or desktop when an update is actually found by that background timer, you have two cool options:
+
+1. The MOTD (Message of the Day)
+If you use a terminal frequently, you can have it tell you if updates are waiting when you log in.
+
+Edit /etc/fwupd/fwupd.conf.
+
+Ensure ShowDeviceNotifications=true is set.
+
+This usually integrates with the system MOTD on many distros, though on Arch you might need to check the fwupd-refresh.service logs to see results.
+
+2. Desktop Notifications (GNOME/KDE)
+If you are running a desktop environment like GNOME or KDE Plasma, you don't even need the systemd timer manually.
+
+GNOME: Uses gnome-software to check in the background.
+
+KDE: Uses the Discover backend.
+
+Since you're on Arch, you'd just need to install the package packagekit-qt6 (for KDE) or gnome-software to get GUI notifications.
+
+🚏 Next Step
+Since you've now disabled lvfs-testing and enabled the refresh timer, your system is in a "set and forget" state.
+
+Would you like me to show you how to check your battery wear levels or SSD health while we're looking at your Framework's hardware stats?
+
+You said
+i'm using hyprland
+
+Gemini said
+Since you're on Hyprland, you likely don't have a "Software Center" sending you notifications. You’ll need a few lightweight tools to keep an eye on things.
+
+1. Firmware & System Notifications
+Since you have the fwupd-refresh.timer running, the easiest way to get notified is to use swaync (Sway Notification Center) or mako. These are the standard notification daemons for Hyprland.
+
+Install a daemon: sudo pacman -S swaync (recommended for its built-in control center).
+
+Update check: Add a line to your waybar config or a simple cron script that runs fwupdmgr get-updates and pipes the output to notify-send if updates are found.
+
+2. Battery Health & Wear (The "Framework way")
+Framework laptops use the ChromeOS EC, which stores battery health data. You can read this directly from the kernel's power supply interface.
+
+Quick Command:
+
+Bash
+cat /sys/class/power_supply/BAT1/capacity_level    # Should say "Normal"
+cat /sys/class/power_supply/BAT1/energy_full      # Current full charge capacity
+cat /sys/class/power_supply/BAT1/energy_full_design # Original design capacity
+The Math: 
+
+Wear %=100×(1− 
+energy_full_design
+energy_full
+​
+ )
+Pro Tip: For the Intel Ultra 7, you should also install power-profiles-daemon or tlp. Many Hyprland users prefer power-profiles-daemon because it integrates nicely with Waybar to switch between "Power Saver," "Balanced," and "Performance."
+
+3. SSD Health Check
+Since you have a WD BLACK SN850X (an absolute beast of a drive), you want to monitor its "Percentage Used" and "Critical Warnings."
+
+Install the tool:
+
+Bash
+sudo pacman -S smartmontools
+Run the check:
+
+Bash
+sudo smartctl -a /dev/nvme0n1
+What to look for:
+
+Percentage Used: This is the % of the rated TBW (Total Bytes Written) you've used. If it's under 5%, your drive is basically brand new.
+
+Data Units Written: Shows how much total data has been moved.
+
+Media and Data Integrity Errors: This must be 0. If it’s not, back up your data immediately.
+
+🔋 A Quick Framework Battery Tip
+Since you're on Arch, you can set a Charge Limit to stop the battery at 80% if you're usually plugged in. This is the single best thing you can do for Framework battery longevity.
+
+The Command:
+
+Bash
+echo 80 | sudo tee /sys/class/power_supply/BAT1/charge_control_end_threshold
+(Note: This resets on reboot unless you add it to a udev rule or use a tool like ectool).
+
+Would you like me to help you write a simple Waybar module that shows your SSD temperature or battery wear level?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

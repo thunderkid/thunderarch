@@ -1,0 +1,110 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+neovim. switching tabs
+
+Gemini said
+In Neovim, "tabs" can be a bit confusing because they don't work exactly like tabs in a web browser. In Neovim, a tab is actually a collection of windows.
+
+Here is the breakdown of the default commands and how to make them much faster.
+
+1. Default Commands (The "Vanilla" Way)
+If you haven't customized your configuration yet, use these commands in Normal Mode:
+
+gt: Go to the next tab.
+
+gT: Go to the previous tab.
+
+{number}gt: Go to a specific tab by index (e.g., 2gt jumps to the second tab).
+
+:tabn / :tabp: Command line versions for next and previous.
+
+:tabclose: Close the current tab.
+
+2. Recommended Keymaps
+Most users find gt a bit clunky. Adding these to your init.lua makes switching feel much more fluid:
+
+Lua
+-- Use Alt + number to jump to tabs
+for i = 1, 9 do
+  vim.keymap.set('n', '<A-' .. i .. '>', i .. 'gt', { desc = 'Gap to tab ' .. i })
+end
+
+-- Use H and L (Shift + h/l) to cycle tabs
+vim.keymap.set('n', 'H', ':tabprevious<CR>', { silent = true })
+vim.keymap.set('n', 'L', ':tabnext<CR>', { silent = true })
+3. Buffers vs. Tabs (Important!)
+New users often use tabs when they actually want buffers.
+
+Buffers: The actual files you have open.
+
+Tabs: Layouts to organize those files.
+
+If you are looking for that "VS Code style" bar at the top where every open file has a tab, you usually want a plugin like bufferline.nvim or barbar.nvim. These treat buffers as visual tabs.
+
+Summary Table
+Action	Command
+Next Tab	gt
+Previous Tab	gT
+New Tab	:tabnew
+Close Tab	:tabc
+List Tabs	:tabs
+Would you like me to help you set up a plugin like Bufferline so your open files look more like a traditional editor?
+
+You said
+i mean switching panes after vsplit. hotkeys.
+
+Gemini said
+Ah, got it! In Neovim lingo, those are called Windows.
+
+By default, moving between splits is a bit of a finger-stretcher because it requires the Ctrl + w prefix. Here are the keys you need right now and how to make them much better.
+
+1. The Default Navigation
+To move focus, press Ctrl + w, release, and then use a direction key:
+
+Ctrl + w + h: Move Left
+
+Ctrl + w + j: Move Down
+
+Ctrl + w + k: Move Up
+
+Ctrl + w + l: Move Right
+
+Tip: You can also use Ctrl + w + w to simply cycle through all open windows.
+
+2. The "Pro" Way (Better Keybinds)
+Most Neovim users find the double-key combo annoying. You can map Ctrl + h/j/k/l to move directly between panes by adding this to your init.lua:
+
+Lua
+-- Move between windows using Ctrl + hjkl
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move focus to the right window' })
+3. Quick Window Management
+Since you’re working with splits, these extra shortcuts will save you a lot of typing:
+
+Action	Shortcut
+Close current pane	Ctrl + w then q (or :q)
+Make panes equal size	Ctrl + w then =
+Max out height	Ctrl + w then _
+Max out width	Ctrl + w then |
+Rotate windows	Ctrl + w then r
+4. Integration with Tmux?
+If you use Tmux alongside Neovim, you’ll notice that Ctrl + hjkl works in Vim but stops at the edge of the terminal.
+
+I highly recommend the plugin vim-tmux-navigation. it allows you to use the same hotkeys to move seamlessly from a Neovim pane directly into a Tmux pane as if they were the same program.
+
+Would you like the code snippet to set up that seamless Neovim-to-Tmux navigation?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

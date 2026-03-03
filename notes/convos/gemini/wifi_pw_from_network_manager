@@ -1,0 +1,54 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+arch. how get the password of the current wifi?
+
+Gemini said
+If you're running Arch Linux and need to recover the password for the network you are currently using, you can find it stored in your network configuration files. On most Arch setups, this is handled by NetworkManager.
+
+Since these files contain sensitive security credentials, you will need sudo privileges to view them.
+
+Method 1: Using the Command Line (NetworkManager)
+NetworkManager stores connection profiles in /etc/NetworkManager/system-connections/. Each Wi-Fi network has its own file.
+
+List your saved connections to find the exact name (SSID):
+nmcli connection show
+
+Display the password for your specific network (replace YourWiFiName with the actual SSID):
+sudo nmcli -s device wifi show-password
+Note: The -s flag asks the secret agent for the password.
+
+Alternatively, you can read the configuration file directly:
+sudo cat /etc/NetworkManager/system-connections/YourWiFiName.nmconnection
+
+Look for the line under [wifi-security] that starts with psk=.
+
+Method 2: If you use iwd (iNet wireless daemon)
+If you’ve ditched NetworkManager for iwd, the profiles are stored in a different location:
+
+sudo cat /var/lib/iwd/YourWiFiName.psk
+
+The password will be listed next to Passphrase=.
+
+Method 3: The GUI Way (If using KDE or GNOME)
+If you are using a desktop environment, you don't even need the terminal:
+
+GNOME: Go to Settings > Wi-Fi, click the gear icon next to your network, and look under the Security tab. Check "Show password."
+
+KDE Plasma: Click the network icon in your tray, select the connection, click Configure, go to the Wi-Fi Security tab, and click the eye icon in the password field.
+
+Quick Security Tip: Since Arch doesn't "hide" these passwords from anyone with root access, it's a good reminder that if someone gains physical access to your machine or your root password, they have your Wi-Fi keys too.
+
+Would you like me to show you how to set up a password manager like KeePassXC or Pass to store these credentials more securely?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

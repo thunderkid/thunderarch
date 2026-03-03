@@ -1,0 +1,177 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+so look. I'm on arch with hyprland and waybar. I apparently have nerd fonts installed via pacman. I did this so I'd get the correct fonts on waybar, which now works. But on now I've got starship installed too. And starship is not showing all fonts correctly. Here is what makes me think I've got nerdfonts installed:
+
+
+
+🕑 16:29  ~ 
+
+ pacman -Qs ttf-
+
+local/noto-fonts 1:2026.02.01-1
+
+    Google Noto TTF fonts
+
+local/ttf-dejavu 2.37+18+g9b5d1b2f-7
+
+    Font family based on the Bitstream Vera Fonts with a wider range of
+
+    characters
+
+local/ttf-liberation 2.1.5-2
+
+    Font family which aims at metric compatibility with Arial, Times New
+
+    Roman, and Courier New
+
+local/ttf-nerd-fonts-symbols 3.4.0-1 (nerd-fonts)
+
+    High number of extra glyphs from popular 'iconic fonts'
+
+local/ttf-nerd-fonts-symbols-common 3.4.0-1
+
+    High number of extra glyphs from popular 'iconic fonts' (common files)
+
+local/woff2-font-awesome 7.2.0-1
+
+    Iconic font designed for Bootstrap - woff2 format
+
+Gemini said
+It looks like you’ve hit the classic "Nerd Font Paradox": Waybar looks great because it's pulling from your system-wide symbols, but your terminal (and Starship) is struggling because it doesn't know which actual letters to pair those symbols with.
+
+Here is the situation: You have the Symbols-only Nerd Font package installed. This is great for apps like Waybar that can "fallback" to these symbols, but for Starship to render correctly in a terminal, your terminal emulator (like Alacritty, Kitty, or Foot) needs to be told exactly what to display.
+
+The Issue: Symbols vs. Patched Fonts
+Currently, you have ttf-nerd-fonts-symbols installed. This contains only the icons. Starship usually expects your terminal to be using a Patched Font—a font where the icons are baked directly into the typeface (e.g., JetBrains Mono + Icons).
+
+Option 1: The "Patched Font" Route (Recommended)
+Instead of relying on a separate symbols-only package, install a specific Nerd Font and set your terminal to use it. This is usually the most stable way to get Starship looking perfect.
+
+Install a popular patched font:
+
+Bash
+sudo pacman -S ttf-jetbrains-mono-nerd
+(Other popular choices: ttf-cascadia-code-nerd, ttf-fira-code-nerd)
+
+Update your terminal config:
+Open your terminal configuration file (e.g., ~/.config/alacritty/alacritty.toml or ~/.config/kitty/kitty.conf) and set the font family to:
+JetBrainsMono Nerd Font
+
+Option 2: The "Fallback" Route (The Lazy Fix)
+If you love your current terminal font (like DejaVu or Noto) and don't want to change it, you need to ensure Fontconfig is correctly layering the symbols on top of your text.
+
+Create (or edit) ~/.config/fontconfig/fonts.conf:
+
+XML
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+ <alias>
+  <family>monospace</family>
+  <prefer>
+    <family>Your-Current-Font-Name</family>
+    <family>SymbolsNerdFont Mono</family>
+  </prefer>
+ </alias>
+</fontconfig>
+Why is Starship still broken?
+Starship uses specific Powerline and Nerd Font v3 glyphs. Since your pacman output shows version 3.4.0-1, you have the newest icons, but if your terminal isn't explicitly told to use SymbolsNerdFont, it will just show those annoying empty boxes ([?]).
+
+Quick Check:
+Run this command in your terminal. If you don't see a folder icon, your terminal emulator is the bottleneck:
+echo -e "\uf07b"
+
+Would you like me to help you figure out the specific font name for your terminal config, or help you tweak your Starship preset to match the icons you currently have?
+
+You said
+what's more modern? alacritty.toml or alacritty.yml ?
+
+Gemini said
+Definitely .toml.
+
+Alacritty officially made the switch from .yml to .toml in late 2023 (starting with version 0.13.0). If you are using the latest version on Arch (which you almost certainly are, given it's a rolling release), .toml is the standard.
+
+Why the change?
+The developers moved to TOML because:
+
+Performance: TOML is faster and simpler for the program to parse.
+
+Human-Friendly: It avoids the "indentation hell" of YAML where one missing space breaks the entire config.
+
+Consistency: Much of the Rust ecosystem (which Alacritty is built with) uses TOML by default.
+
+How to migrate (The Fast Way)
+If you currently have an old alacritty.yml and want to modernize it, you don't have to rewrite it by hand. Alacritty has a built-in migration tool:
+
+Bash
+alacritty migrate
+This will automatically create a backed-up version of your .yml and generate a fresh alacritty.toml for you.
+
+Example Font Config (TOML)
+Since we were talking about your Nerd Fonts earlier, here is how the font section should look in your new alacritty.toml if you decide to install a patched font like JetBrains Mono:
+
+Ini, TOML
+[font]
+size = 11.0
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+Would you like me to check if your current Alacritty version is fully updated, or shall we look at the specific lines needed to fix those Starship icons in your new TOML file?
+
+You said
+actually I've just noticed that ghostty is working fine with the fonts I have. I'd heard good things about ghostty. I want something fast, light, futureproof. what do you suggest I do.
+
+Gemini said
+Ghostty is essentially the "Alacritty of 2026." If it’s already working for you and handling your fonts without a headache, stick with it. You’ve accidentally stumbled onto the current favorite for Arch/Hyprland users. Here is why Ghostty fits your "fast, light, and futureproof" criteria better than Alacritty right now:
+
+Why Ghostty is the "Move"
+Modern Feature Set: Unlike Alacritty, which has a "minimalist" philosophy that often leaves out features like ligatures and image support (sixel/kitty protocol), Ghostty includes them by default.
+
+Superior Font Handling: Ghostty uses a very modern rendering engine (written in Zig) that is much better at "fallback" fonts. That’s why your Starship icons worked immediately—it’s smarter at finding the Nerd Font symbols on your system than Alacritty is.
+
+Performance: It is GPU-accelerated and designed for low-latency. In real-world use, you won't notice a speed difference between it and Alacritty, but Ghostty handles complex TUI apps (like Neovim or Yazi) with more grace.
+
+Native Feel: It uses GTK4 on Linux, meaning it integrates beautifully with Wayland and Hyprland's scaling.
+
+How to make it "Futureproof"
+Since you're on Arch, you want to make sure you're handling the config correctly. Ghostty uses a simple config file located at ~/.config/ghostty/config.
+
+To keep it light and snappy, here is a "pro" starter config for your Hyprland setup:
+
+Bash
+# Appearance
+theme = dark
+background-opacity = 0.9
+window-decoration = false
+
+# Font (Ghostty is great at finding these, but being explicit is better)
+font-family = "JetBrainsMono Nerd Font"
+font-size = 11
+
+# Performance & Mouse
+copy-on-select = true
+confirm-close-surface = false
+One Final Nerd Font Tip
+Since you currently have ttf-nerd-fonts-symbols installed, Ghostty is doing the heavy lifting to "stitch" those symbols into your text. To make your setup truly robust and avoid any future Starship "glitches," I still recommend installing a full patched font:
+
+Bash
+sudo pacman -S ttf-jetbrains-mono-nerd
+Would you like me to help you set up a specific theme for Ghostty, or perhaps help you configure Hyprland window rules so Ghostty opens with the exact transparency or floating status you want?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

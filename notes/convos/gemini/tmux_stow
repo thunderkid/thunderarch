@@ -1,0 +1,73 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+how do you use stow to store the config files of tmux? it seems to have a strange structure
+
+Gemini said
+You’re right to notice the "strange" structure. GNU Stow is essentially a symlink manager, and it expects your folder structure to mimic exactly how you want your files to look in your home directory.
+
+The "trick" to Stow is remembering that it treats the directory you run it from as the root of a virtual file system.
+
+The Core Concept
+If you want a file at ~/.config/tmux/tmux.conf, your Stow directory needs to have a folder representing the package (e.g., tmux), followed by the path relative to your home folder.
+
+Step-by-Step Setup
+1. Create your Dotfiles Directory
+First, create a dedicated folder for all your configs (if you haven't already):
+
+Bash
+mkdir ~/dotfiles
+cd ~/dotfiles
+2. Mirror the Path
+Since tmux usually looks for its config at ~/.config/tmux/tmux.conf, you need to recreate that path inside your tmux package folder:
+
+Bash
+mkdir -p tmux/.config/tmux
+3. Move your Config
+Move your existing config into that deep nested folder:
+
+Bash
+mv ~/.config/tmux/tmux.conf ~/dotfiles/tmux/.config/tmux/
+Your directory structure should now look like this:
+
+Plaintext
+~/dotfiles/
+└── tmux/
+    └── .config/
+        └── tmux/
+            └── tmux.conf
+4. "Stow" it
+From inside the ~/dotfiles directory, run:
+
+Bash
+stow tmux
+What just happened?
+Stow looked inside the tmux folder, saw .config/tmux/tmux.conf, and created a symbolic link at ~/.config/tmux/tmux.conf pointing back to your dotfiles.
+
+Common Gotcha: The Home Directory Root
+Some people prefer their tmux config to live directly at ~/.tmux.conf (the old-school way). If that's what you want, your structure is much simpler:
+
+Structure: ~/dotfiles/tmux/.tmux.conf
+
+Result: Stow links ~/dotfiles/tmux/.tmux.conf → ~/.tmux.conf
+
+Pro Tips
+The Verbose Flag: Use stow -v tmux to see exactly what links are being created.
+
+The Simulation Mode: Use stow -n tmux (dry run) to test the command without actually moving or linking anything. It's a lifesaver for avoiding accidental overwrites.
+
+Unstowing: If you mess up, stow -D tmux will delete the symlinks and clean up.
+
+Would you like me to help you write a small shell script to automate this for the rest of your .config folders?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

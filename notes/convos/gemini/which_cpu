@@ -1,0 +1,221 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+framework 13 running arch. how see whether I am running intel core ultra series 1?
+
+Gemini said
+To verify if you are running an Intel Core Ultra Series 1 (codenamed "Meteor Lake") on your Framework 13, you can use several standard Linux tools.
+
+Since you're on Arch, you likely have these installed, or can quickly grab them from the official repositories.
+
+1. The Quickest Way (Terminal)
+Open your terminal and run:
+
+Bash
+lscpu | grep "Model name"
+What to look for:
+
+Series 1 processors follow the naming convention Intel(R) Core(TM) Ultra [5/7/9] [1xx][H/U].
+
+Example: Intel(R) Core(TM) Ultra 7 155H or Intel(R) Core(TM) Ultra 5 125H.
+
+If you see "12th Gen" or "13th Gen" (e.g., i7-1360P), you are on an older Framework 13 model.
+
+2. Using inxi (More Detailed)
+If you want a cleaner, hardware-focused summary, use inxi. If it's not installed, run sudo pacman -S inxi.
+
+Bash
+inxi -C
+This will output something like:
+
+CPU: 16-core (6-P + 8-E + 2-LPE) Intel Core Ultra 7 155H (-MT-MCP-)
+
+The LPE (Low Power Island) cores are a hallmark of the Core Ultra Series 1 architecture.
+
+3. Visual Verification (Hardware)
+If you aren't sure about the software output, you can identify the Series 1 Framework 13 by its physical ports and screen:
+
+The Display: The "Series 1" model often ships with the 2.8k (2880x1920) display, which features distinctive rounded top corners.
+
+Expansion Cards: It supports the newer USB-C expansion cards with improved power delivery, though these look identical to the older ones from the outside.
+
+Summary Table for Series 1 Models
+Model Tier	Processor Name	Total Cores / Threads
+Ultra 5	125H	14 Cores / 18 Threads
+Ultra 7	155H	16 Cores / 22 Threads
+Ultra 7	165H	16 Cores / 22 Threads
+Would you like me to help you check if your NPU (Neural Processing Unit) is being recognized correctly by the Arch kernel?
+
+You said
+yes. how?
+
+Gemini said
+To check for the NPU (Neural Processing Unit)—a key feature of the Intel Core Ultra Series 1—you need to look for the Intel VPU (Versatile Processing Unit) device. On Linux, this is handled by the ivpu driver.
+
+1. Check for the Hardware Device
+Run the following command to see if the kernel identifies the NPU hardware on the PCI bus:
+
+Bash
+lspci -nn | grep -i "VPU"
+Expected Output:
+You should see a line mentioning an Intel Corporation Device 7d1d (or similar) labeled as a "VPU" or "AI Accelerator."
+
+2. Verify the Kernel Driver (ivpu)
+Even if the hardware is there, the NPU requires the ivpu driver to be loaded. Check if it's active:
+
+Bash
+lsmod | grep ivpu
+If the command returns nothing, the driver isn't loaded. On Arch, this usually means you need to ensure your kernel is up to date (6.3+ is required, though as of 2026, you likely have a much newer one).
+
+3. Real-time Monitoring with intel-gpu-tools
+The NPU is often grouped with the GPU tools. You can use intel_gpu_top (part of the intel-gpu-tools package) to see if the NPU is actually doing work.
+
+Install: sudo pacman -S intel-gpu-tools
+
+Run: sudo intel_gpu_top
+
+What to look for:
+In the dashboard that appears, look for a section labeled "Video/Enhancement" or specifically "NPU". If the NPU is detected, it will appear as a separate engine block below the 3D/Render engines.
+
+4. Direct Kernel Logs (Dmesg)
+If you suspect it’s not working, check the boot logs to see if the firmware failed to load:
+
+Bash
+sudo dmesg | grep -i ivpu
+Note: If you see "firmware: failed to load intel/vpu/vpu_37xx_v0.0.bin", you may need to install the linux-firmware package or ensure your /lib/firmware/intel/vpu/ directory is populated.
+
+Summary Checklist
+Kernel Version: Must be 6.3 or higher (check with uname -r).
+
+Firmware: linux-firmware package must be installed.
+
+Device ID: Should be 7d1d for Ultra Series 1.
+
+Would you like me to help you find some AI-accelerated applications on Arch that can actually put that NPU to use?
+
+You said
+spci -nn | grep -i "VPU" returns nothing
+
+do i need to install linux-firmware? using pacman?
+
+Gemini said
+If lspci is returning nothing for "VPU," it typically means one of three things: the device is disabled in your BIOS, the PCI IDs in your system aren't updated, or (rarely) you are on a kernel that hasn't initialized the device properly.
+
+Here is the step-by-step to fix this on Arch:
+
+1. The "Hidden" PCI ID
+Sometimes lspci won't show the name "VPU" if the local PCI ID database is old. Try searching by the specific Intel vendor ID for the NPU:
+
+Bash
+lspci -nn -d 8086:7d1d
+If this returns a line: Your NPU is physically "seen" by the system, just not labeled.
+
+If this returns nothing: Proceed to the BIOS check.
+
+2. Check your BIOS (Crucial)
+On Framework laptops, the NPU can sometimes be disabled in the BIOS to save power or due to a "Default" setting.
+
+Reboot and tap F2 to enter BIOS.
+
+Go to the Advanced tab.
+
+Look for NPU Support or Intel VPU. Ensure it is set to Enabled.
+
+Save and exit (F10).
+
+3. Install the Firmware (Yes, do this)
+You asked if you need linux-firmware. Yes. On Arch, the linux-firmware package contains the binary blobs needed for the NPU (specifically the intel/vpu files).
+
+Run this to ensure you have everything:
+
+Bash
+sudo pacman -Syu linux-firmware linux-firmware-intel
+Note: As of late 2025/early 2026, Intel upstreamed specific NPU firmware to these packages, so a standard update usually fixes driver initialization issues.
+
+4. Load the Driver
+If the hardware is now visible in lspci but still not working, try loading the kernel module manually:
+
+Bash
+sudo modprobe intel_vpu
+Then check if a device node has been created:
+
+Bash
+ls /dev/accel/
+If you see accel0, your NPU is officially live!
+
+5. Final Check (Kernel Logs)
+If it's still not showing up, the kernel logs will tell you exactly why (e.g., missing firmware or hardware failure). Run:
+
+Bash
+sudo dmesg | grep -iE "vpu|ivpu|accel"
+Summary of requirements for Arch:
+
+Kernel: 6.3+ (You are likely on 6.12+ or 6.13+ in 2026).
+
+Firmware: linux-firmware and linux-firmware-intel.
+
+BIOS: NPU must be enabled.
+
+Once you see /dev/accel/accel0, would you like me to help you install the Intel NPU Driver from the AUR so you can actually run AI models on it?
+
+You said
+lspci -nn -d 8086:7d1d
+
+00:0b.0 Processing accelerators [1200]: Intel Corporation Meteor Lake NPU [8086:7d1d] (rev 04)
+
+Gemini said
+Success! Your NPU is physically detected. The ID [8086:7d1d] confirms you are indeed on the Intel Core Ultra Series 1 (Meteor Lake) architecture.
+
+The reason it didn't show up before is likely because your local PCI ID database (which maps those numbers to names) wasn't updated, but the hardware is definitely there.
+
+To actually use it for AI tasks (like background blur in video calls or running Local LLMs), you need to set up the user-space driver and the OpenVINO toolkit. On Arch, the easiest way is via the AUR.
+
+1. Install the User-Space Driver
+You need the intel-npu-level-zero driver to allow applications to talk to that hardware.
+
+Bash
+# Using an AUR helper like yay
+yay -S intel-npu-level-zero-bin
+2. Verify the Driver is Active
+Once installed, check if the kernel has created the acceleration device node:
+
+Bash
+ls -l /dev/accel/accel0
+If it exists: The driver is loaded and the hardware is ready.
+
+If it doesn't: You may need to reboot or run sudo modprobe ivpu.
+
+3. Test with npu-top (The "Task Manager" for your NPU)
+Just like top for your CPU, there is a utility to see NPU utilization.
+
+Install intel-npu-top-git from the AUR.
+
+Run it: sudo intel-npu-top
+
+4. Setting Permissions
+By default, you might need sudo to access the NPU. To allow your user account to use it without root:
+
+Bash
+sudo usermod -aG render $USER
+(Note: You'll need to log out and back in for this to take effect.)
+
+Summary of what you have:
+Hardware: Confirmed (Meteor Lake NPU).
+
+Kernel Driver: ivpu (built-in to your Arch kernel).
+
+User Driver: intel-npu-level-zero (needs installation).
+
+Would you like me to show you how to run a local LLM (like Llama 3) specifically on that NPU using OpenVINO?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

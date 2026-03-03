@@ -1,0 +1,53 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+I've got wl-clipboard installed on arch. I think
+
+✗ pacman -Qs clip
+
+local/wl-clipboard 1:2.2.1-3
+
+    Command-line copy/paste utilities for Wayland
+
+
+
+how do i put a whole file onto the clipboard using command line?
+
+Gemini said
+Since you’re on Wayland and already have wl-clipboard installed, you're in the right place. The command you're looking for is wl-copy.
+
+To put the entire contents of a file onto your clipboard, use the following syntax:
+
+Bash
+wl-copy < path/to/your/file.txt
+Pro Tips for wl-copy
+The Pipe Method: If you're already doing something in the terminal and want to capture the output, just pipe it:
+cat file.txt | wl-copy
+
+Handling Images: One of the coolest features of wl-clipboard is that it isn't just for text. If you want to copy an image file to paste into Discord or GIMP, it detects the MIME type automatically:
+wl-copy < screenshot.png
+
+Clearing the Clipboard: If you copied something sensitive and want it gone:
+wl-copy --clear
+
+Quick Reference Table
+Goal	Command
+Copy File Content	wl-copy < filename
+Copy Command Output	`ls -la
+Paste to Terminal	wl-paste > newfile.txt
+Paste to Stdout	wl-paste
+Note: Since you're on Arch, make sure your environment variable XDG_SESSION_TYPE is actually set to wayland. If you ever hop back into an X11 session, wl-copy won't work, and you'd need xclip or xsel instead.
+
+Would you like me to show you how to set up an alias so you can just type something shorter like copy < file?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

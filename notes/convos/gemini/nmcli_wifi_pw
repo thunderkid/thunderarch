@@ -1,0 +1,55 @@
+Gemini
+Conversation with Gemini
+You said
+arch linux. NetworkManager. how get the password of the current wifi?
+
+Gemini said
+Retrieving a saved Wi-Fi password in Arch Linux using NetworkManager is straightforward, as it stores connection profiles in plain text (assuming you have root privileges).
+
+Here are the two best ways to do it.
+
+Method 1: The Terminal (Recommended)
+NetworkManager stores individual connection files in /etc/NetworkManager/system-connections/.
+
+List your saved connections to find the exact name of your Wi-Fi:
+
+Bash
+nmcli connection show
+Read the configuration file for that specific network (replace SSID_NAME with your actual network name):
+
+Bash
+sudo cat /etc/NetworkManager/system-connections/SSID_NAME.nmconnection
+Find the password: Look for the [wifi-security] section. The password is listed next to psk=.
+
+Method 2: The nmcli Command
+If you prefer a cleaner output without digging through the whole file, you can use the command-line tool directly.
+
+Run this command:
+
+Bash
+nmcli -s show SSID_NAME | grep psk
+Note: The -s (or --show-secrets) flag is crucial here. Without it, NetworkManager will hide the password field for security reasons.
+
+Method 3: The GUI Way (If you have a Desktop Environment)
+If you’re running GNOME, KDE Plasma, or XFCE:
+
+Open your Network Settings.
+
+Select the Wi-Fi tab and click the Settings/Gear icon next to your current network.
+
+Navigate to the Wi-Fi Security tab.
+
+Check the Show password box.
+
+Why can't I see it?
+If the psk line is empty or missing, your password might be stored in a keyring (like GNOME Keyring or KDE Wallet) rather than the configuration file. In that case, you'll need to open your specific desktop "Passwords and Keys" application to find it.
+
+Would you like me to show you how to move those passwords from the keyring into the configuration file so they're easier to access in the future?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

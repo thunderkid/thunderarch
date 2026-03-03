@@ -36,3 +36,17 @@ and stuff via pacman:
 github-cli
 
 network: because of apostrophe in network name, used nmtui instead of just nmcli to select line.
+
+Stuff installed before hyprland:
+base
+dhclient
+iwd
+linux
+linux-firmware
+man-db
+man-pages
+networkmanager
+openssh
+sudo
+vim
+

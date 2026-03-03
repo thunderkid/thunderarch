@@ -1,0 +1,62 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+nvim. compare two folders
+
+Gemini said
+Comparing two folders directly within Neovim isn't a native feature like comparing two files, but because Neovim is highly extensible, you have three solid ways to do it depending on how much "extra" stuff you want to install.
+
+1. The Built-in Way (Using vimdiff)
+While Neovim doesn't have a "directory diff" mode out of the box, you can leverage the underlying shell. If you are on a Unix-like system (Linux/macOS), you can run this from your terminal:
+
+Bash
+nvim -d <(ls folder1) <(ls folder2)
+How it works: This passes the file lists of both folders into Neovim's diff mode.
+
+Pro: No plugins required.
+
+Con: You can only see which filenames differ; you can't "dive into" the files to see content differences from here.
+
+2. The Plugin Way (Recommended)
+If you want a visual, side-by-side directory tree where you can expand folders and see exactly what’s different, you need a plugin.
+
+DirDiff.vim
+This is the classic choice for this specific task.
+
+Command: :DirDiff folder1 folder2
+
+Features: It opens two windows side-by-side. If you press Enter on a file, it opens a diff of those two specific files.
+
+Diffview.nvim
+If you are using Git, Diffview.nvim is the gold standard. It provides a dedicated tab for cycling through changed files.
+
+Command: :DiffviewOpen (to compare branches/commits) or :DiffviewOpen -- folder1 folder2.
+
+3. The "Quick & Dirty" Terminal Toggle
+If you just want to see the differences without fancy buffers, you can call the standard system diff from inside Neovim:
+
+Vim Script
+:!diff -qr folder1 folder2
+-q: Brief (tells you if files differ without showing code).
+
+-r: Recursive (looks inside subfolders).
+
+Comparison Table
+Method	Best For	Ease of Use
+Terminal nvim -d	Quick filename checks	Medium
+DirDiff Plugin	Deep folder synchronization	Easy
+Diffview Plugin	Git-heavy workflows	Advanced
+Shell :!diff	Fast "yes/no" comparison	Instant
+Would you like me to provide the configuration code to install one of these plugins using a manager like lazy.nvim?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

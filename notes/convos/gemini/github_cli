@@ -1,0 +1,56 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+installing github cli on arch
+
+Gemini said
+Installing the GitHub CLI (gh) on Arch Linux is straightforward because it’s available in the official repositories. You don't even need to mess with the AUR unless you want the bleeding-edge development version.
+
+Here is the quickest way to get it up and running.
+
+1. Installation
+Open your terminal and use pacman to install the package:
+
+Bash
+sudo pacman -S github-cli
+2. Authentication
+Once installed, you need to link the CLI to your GitHub account. Run the following command and follow the interactive prompts:
+
+Bash
+gh auth login
+What to expect during login:
+
+Account: GitHub.com (or GitHub Enterprise).
+
+Protocol: HTTPS or SSH (SSH is generally preferred for seamless pushing/pulling).
+
+Method: "Login with a web browser" is the easiest. It will give you an 8-character code to paste into a browser window.
+
+3. Verification
+To make sure everything is linked correctly, check your status:
+
+Bash
+gh auth status
+Common Commands to Get Started
+Now that you're authenticated, here are the most useful "day one" commands:
+
+Command	Action
+gh repo clone user/repo	Clones a repository locally.
+gh repo create	Starts a new repo on GitHub from your terminal.
+gh pr list	Lists all open pull requests for the current repo.
+gh issue create	Opens a new issue without leaving the CLI.
+Pro Tip: If you use a lot of aliases or want to customize the CLI experience, you can find your configuration files at ~/.config/gh/.
+
+Would you like me to help you set up an SSH key specifically for GitHub so you don't have to enter passwords?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+
