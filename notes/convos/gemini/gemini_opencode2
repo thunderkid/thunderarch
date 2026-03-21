@@ -1,0 +1,85 @@
+Gemini
+Conversation with Gemini
+You said
+I've got opencode installed. I'd like to start using gemini from the command line rather than using it from a browser aimed at gemini.google.com. Can I do this via openai? I want to have available the same service that isn't counting and billing tokens. Can I do this? what are the advantages/disadvantages of the google gemini dedicated cli/tui - if there is such a thing - vs the opencode tui?
+
+Gemini said
+You can definitely move your Gemini experience to the terminal, but there are a few "gotchas" regarding the OpenAI compatibility and how billing works.
+
+1. Can you use Gemini via OpenAI?
+Yes and No. * The "No": You cannot use an OpenAI API key to access Gemini. They are separate companies with separate billing systems.
+
+The "Yes": You can use an OpenAI-compatible endpoint. Many CLI tools (including OpenCode) allow you to point to a "Base URL." Since Google provides an OpenAI-compatible adapter for its Gemini API, you can configure OpenCode to talk to Gemini as if it were talking to OpenAI.
+
+2. Can you avoid billing/token counting?
+If you want the exact same service as the web version (unlimited usage for a flat monthly subscription), the answer is generally no for API-based tools.
+
+Web/App Interface: Usually covered by a flat subscription (Gemini Advanced) with high usage limits.
+
+CLI/API Interface: This uses the Google AI Studio or Vertex AI backends. These operate on a Free Tier (with rate limits and data sharing) or a Pay-as-you-go Tier (where you pay per 1 million tokens).
+
+[!IMPORTANT]
+
+To use Gemini in the terminal for free, you must use a Google AI Studio API Key on the "Free of charge" plan. This gives you a generous quota (e.g., 1,000 requests/day for Flash models), but Google may use your data to improve their models.
+
+3. OpenCode TUI vs. Official Gemini CLI
+There is an official Gemini CLI (often called gemini-cli), and it differs significantly from the OpenCode TUI.
+
+Feature	OpenCode TUI	Official Gemini CLI
+Primary Focus	Coding Agent. It reads your files, suggests edits, and can execute terminal commands to fix bugs.	General Assistant. It's a "ReAct" agent that can search the web and run local tools, but is more of a "chat-first" utility.
+Interface	Full Terminal UI (TUI) with split panes, chat history, and file trees.	Interactive prompt or one-off commands (e.g., gemini "fix my code").
+Model Support	Agnostic. Can use Gemini, Claude, GPT-4, or local models (Ollama).	Gemini Only. Deeply optimized for Gemini 2.0/3.0 features.
+Complexity	Higher. Requires more setup (configs, provider connections).	Lower. Usually a simple npm install -g @google/gemini-cli and a Google login.
+Ecosystem	Strong focus on "vibe coding" and deep repository context.	Supports MCP (Model Context Protocol) to connect to external data/tools.
+Summary Recommendation
+If you want a dedicated coding partner: Stick with OpenCode. Go to Google AI Studio, get a free API key, and add it to OpenCode using the /connect command. This uses the Free Tier (no billing).
+
+If you want a quick, official Google tool: Try the official Gemini CLI. It is faster for one-off questions and has built-in Google Search grounding that works very well in the terminal.
+
+Would you like the specific configuration steps to link a free Gemini API key into your OpenCode setup?
+
+You said
+I'm not asking anything about openai. I'm asking about opencode.
+
+Gemini said
+Using OpenCode for Gemini in the terminal is a great move for a keyboard-driven workflow. To address your specific goal—using the terminal without the "token counting and billing" anxiety of a standard API—there is a specific way to set this up.
+
+1. Can you use OpenCode without token billing?
+By default, most CLI tools use an API Key, which is "pay-as-you-go" (token billing). However, you have two ways to get a "free" or "flat-rate" experience:
+
+The "Free Tier" Loophole: If you get an API key from Google AI Studio, you can use the Free of Charge plan. This gives you a very high quota (e.g., 1,500 requests per day for Gemini 1.5 Flash) without ever entering a credit card. It "counts" tokens for the quota, but it won't "bill" you.
+
+The Subscription Sync (OAuth): There is a community plugin for OpenCode called opencode-gemini-auth. This allows you to log in via OAuth using your existing Google account. If you have a Gemini Advanced subscription ($20/month), this plugin lets OpenCode tap into that subscription's "unlimited" usage rather than using a metered API key.
+
+2. OpenCode TUI vs. Official Gemini CLI
+While both live in the terminal, they are built for different types of "work."
+
+Feature	OpenCode TUI	Official Gemini CLI (@google/gemini-cli)
+Philosophy	The "Coding Agent." It’s designed to live inside a git repo and do the work for you.	The "Power Assistant." It’s designed to be a faster, smarter version of the web chat.
+Best For	Deep coding tasks: "Refactor this whole directory to use hooks."	Rapid lookups: "How do I unzip this file?" or "Review this PR."
+Interface	Full-screen TUI (Terminal User Interface). It has panes, file trees, and a chat history window.	Command-line. You usually type a command and get a response, or enter a simple interactive loop.
+"Secret Sauce"	LSP Integration. It can "see" your code errors via Language Servers, just like VS Code does.	Google Search Grounding. It can pull real-time info from the web to answer questions about new libraries.
+Multi-Model	Can switch between Gemini, Claude, or local models (Ollama) in the same TUI.	Gemini only. Deeply optimized for Gemini-specific features (like 2M token context).
+3. Which one should you use?
+Use OpenCode if: You want a terminal-based "Cursor" or "Aider" experience. You want the AI to actually write files, run tests, and manage your project.
+
+Use Gemini CLI if: You just want to talk to Gemini without opening a browser. It’s lighter, faster to start, and better at general knowledge because of the built-in Google Search.
+
+How to start with OpenCode + Gemini (Free)
+Go to Google AI Studio and create a Free API Key.
+
+Open your terminal and run opencode.
+
+Type /connect and select Google.
+
+Paste your API key.
+
+As long as you are on the Free tier in AI Studio, you can use it all day without a bill. Just be aware that on the free tier, Google may use your data to train their models (the same way they do on the free web version).
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

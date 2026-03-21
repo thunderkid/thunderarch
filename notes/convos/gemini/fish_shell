@@ -1,0 +1,234 @@
+Gemini
+Conversation with Gemini
+You said
+I'm currently using the bash shell on arch. Thinking of using fish. Can I run them in parallel? discuss with me
+
+Gemini said
+Making the jump from Bash to Fish is like moving from a reliable old pickup truck to a sleek electric sports car. It’s faster and much prettier out of the box, but the engine works a bit differently under the hood.
+
+The short answer is yes, absolutely. You can run them "in parallel" in several ways without breaking your system.
+
+1. How to Run Them Side-by-Side
+You don't have to commit to Fish immediately. Here are the three best ways to test the waters:
+
+The "Guest" Method: Simply type fish in your current Bash terminal. This starts a Fish shell as a child process. When you're done, type exit to go back to Bash.
+
+The Terminal Emulator Method: Most terminal emulators (like Alacritty, Kitty, or Konsole) allow you to set a custom command for new tabs. You can have one tab running Bash and another running Fish simultaneously.
+
+The "Login vs. Interactive" Split: Keep Bash as your system default shell (so scripts don't break) but set your terminal emulator to open Fish by default. This is the safest way to "use" Fish daily while keeping your system environment standard.
+
+2. The "Gotcha": POSIX Compliance
+This is the most important thing to understand when running both. Bash is POSIX-compliant; Fish is not.
+
+Feature	Bash Syntax	Fish Syntax
+Setting Variables	export FOO=bar	set -x FOO bar
+Command Substitution	VAR=$(ls)	set VAR (ls)
+Combining Commands	cmd1 && cmd2	cmd1; and cmd2 (or && in newer versions)
+Loops	for i in {1..5}; do ... done	for i in (seq 5); ... end
+Pro Tip: Do not change your default user shell using chsh -s /usr/bin/fish immediately. Some system scripts on Arch expect a POSIX-compliant shell. While /bin/sh usually points to Bash or Dash, keeping your user shell as Bash and just launching Fish in your terminal avoids weird edge-case bugs.
+
+3. Dealing with your .bashrc
+Your .bashrc aliases and functions will not work in Fish. You will need to migrate them to ~/.config/fish/config.fish.
+
+However, there is a handy tool called "Bass" (available in the AUR) that allows you to run Bash commands/scripts from within Fish. This is a lifesaver if you have a complex script you aren't ready to rewrite yet.
+
+4. Why Fish on Arch is Great
+Since you're on Arch, you'll appreciate the interactive suggestions and tab completion. Fish looks at your history and your files to guess what you’re typing in real-time. On Arch, Fish’s completions for pacman are incredibly robust—it can often suggest specific package names before you’ve typed more than two letters.
+
+My recommendation? Install Fish with sudo pacman -S fish, open your terminal, type fish, and play around.
+
+Are there specific Bash aliases or complex environment variables you're worried about losing in the move?
+
+You said
+all this shite about new tabs in alacritty? does alacritty even have tabs? didn't think it did
+
+Gemini said
+You caught me—I definitely hallucinated a feature there. Alacritty does NOT have tabs. It is a "minimalist" terminal by design, adhering strictly to the philosophy of doing one thing (rendering a terminal) very fast.
+
+If you want to run Bash and Fish in parallel while using Alacritty, you'll need to use one of these three common Arch-user workflows:
+
+1. The Terminal Multiplexer (The "Arch Way")
+Most Alacritty users pair it with tmux or zellij. These tools allow you to split your screen into panes or create "tabs" (windows) managed within the terminal itself, rather than by the GUI.
+
+Workflow: Open Alacritty → Start tmux → Ctrl+b then c to create a new window.
+
+Result: You can have Bash in Window 1 and Fish in Window 2, switching between them with a keystroke.
+
+2. The Window Manager Approach
+If you are using a tiling window manager (like i3, Sway, or Hyprland), "tabs" are handled by the OS.
+
+Workflow: Open Alacritty (Bash) → Hit your "Open Terminal" shortcut again → New Alacritty window opens → Type fish.
+
+Result: You just stack or tile the two windows side-by-side.
+
+3. Multiple Instances
+Even on a desktop environment like GNOME or KDE, you just launch two separate Alacritty windows. Since Alacritty is GPU-accelerated and lightweight, running five instances uses negligible resources compared to one instance of a "heavy" terminal like Tabby or VS Code's integrated terminal.
+
+Comparison of Tab-like behavior for Alacritty users
+Method	Tool	Feel
+Multiplexer	tmux / zellij	Built-in tabs/panes inside the CLI.
+WM Tiling	i3 / sway	The OS treats windows as tabs.
+Alternative Term	kitty / foot	If you really want native tabs but stay fast.
+Bottom Line: My bad on the Alacritty tab mention—I was thinking of Kitty or Konsole. For Alacritty, tmux is your best friend if you want to run Fish and Bash side-by-side in the same window.
+
+Do you already use a multiplexer like tmux, or do you prefer keeping your terminal as "clean" as possible?
+
+You said
+well, I'm using ghostty and also tmux
+
+Gemini said
+Ah, Ghostty. You're using the "cool kid" terminal of the moment. Since Ghostty actually does have native tabs (unlike Alacritty), you have the best of both worlds: native GUI tabs and tmux multiplexing.
+
+Since you're already using tmux, running them in parallel is trivial. Here is how I’d handle the "Fish transition" without burning your Bash bridges:
+
+1. The tmux Side-by-Side
+This is the most "Arch" way to do it. You don't even need to change your default shell.
+
+Open your terminal (starts in Bash).
+
+Start tmux.
+
+Split your pane (Ctrl+b then % or ").
+
+In the new pane, just type fish.
+
+Why this rules: You can literally copy-paste a command from a Bash tutorial in the left pane and see how it needs to be "translated" for Fish in the right pane.
+
+2. The Ghostty Native Way
+Ghostty is fast and supports multiple tabs (Cmd/Ctrl + T) and native splits (Cmd/Ctrl + D or Shift + Cmd/Ctrl + D).
+
+You can configure a Ghostty shortcut to launch a specific surface with Fish while your main window stays Bash.
+
+Or, just keep Ghostty launching your default (Bash) and manually trigger fish when you want that sweet, sweet autosuggestion.
+
+3. The "Hybrid" Setup (Recommended)
+If you start liking Fish but are scared of it breaking your .bash_profile or system scripts:
+
+Keep your chsh (default shell) as Bash.
+
+Tell Ghostty to launch Fish. In your Ghostty config file (usually ~/.config/ghostty/config), add:
+
+Plaintext
+command = /usr/bin/fish
+Result: Every time you open Ghostty, you get Fish. But if you SSH in or run a system script, the OS still sees you as a Bash user. No broken paths, no drama.
+
+A Quick Warning for tmux + Fish
+Fish and tmux sometimes have a spat over $TERM variables or background colors. Since Ghostty uses the xterm-ghostty terminfo, make sure you have ghostty installed on any machine you SSH into, or Fish might complain about missing sequences.
+
+One tip for the transition: Since you're on Arch, install starship (sudo pacman -S starship). It’s a cross-shell prompt. If you use it in both Bash and Fish, your terminal will look identical in both shells, which makes the syntax differences feel less jarring.
+
+Are you planning to port over a massive .bashrc, or are you looking to start fresh with Fish's config.fish?
+
+You said
+I use starship too. Does this mean your warning about $TERM variables is irrelevant?
+
+Gemini said
+Actually, it’s the opposite—using Starship makes the $TERM and terminal-shell relationship more important, not less.
+
+While Starship handles the visuals of your prompt (the colors, the git branch, the symbols), the $TERM variable tells your shell and terminal how to actually "draw" those things and handle input.
+
+Here is why you should still keep an eye on it:
+
+1. The Rendering Chain
+Think of it like this:
+
+Ghostty: The hardware/engine (renders pixels).
+
+Fish/Bash: The brain (processes commands).
+
+Starship: The paint job (makes the prompt look pretty).
+
+$TERM: The translator (tells the brain what the engine is capable of).
+
+If $TERM is set incorrectly (e.g., it says xterm but you’re using xterm-ghostty), Starship might try to send a "Powerline" symbol or a specific 24-bit color code that the shell doesn't think the terminal can handle. This results in flickering, weird blocks [?], or Starship just falling back to a "plain" mode.
+
+2. Ghostty's Specific Perk
+Ghostty is modern. It uses its own terminfo (xterm-ghostty).
+
+The Good: It supports the latest terminal protocols (like the Kitty keyboard protocol).
+
+The Risk: If you ssh from your Arch box into a server that doesn't have Ghostty's terminfo installed, Fish and Starship will get confused. You'll see "Unknown terminal type" errors.
+
+The Fix: In your Ghostty config, if you run into issues, you can force a more "universal" terminfo, though you lose some Ghostty-specific features:
+term = xterm-256color
+
+3. Why Starship is Great for the Switch
+Since you use Starship, your transition from Bash to Fish will be visually seamless.
+
+In Bash, you source it in ~/.bashrc: eval "$(starship init bash)"
+
+In Fish, you add it to ~/.config/fish/config.fish: starship init fish | source
+
+Because Starship is written in Rust and is shell-agnostic, your prompt will look exactly the same in both. You won't feel like you've moved to a different planet every time you switch tmux panes.
+
+4. The "Alt-Backspacing" Annoyance
+One thing to watch for: Bash and Fish handle "Word Deletion" (Alt+Backspace) differently.
+
+Bash usually stops at slashes (stops at each folder in a path).
+
+Fish often deletes the entire path by default.
+
+If you find yourself annoyed by this while running them in parallel, you can tweak Fish's keybinds to mimic Bash so your muscle memory doesn't trip you up.
+
+Summary Table: Starship + Shells
+Feature	Bash + Starship	Fish + Starship
+Look & Feel	Identical	Identical
+Speed	Fast	Fast
+Syntax Highlighting	Requires plugins (e.g., ble.sh)	Built-in / Native
+Auto-suggestions	Requires plugins	Built-in / Native
+Since you've got Ghostty, tmux, and Starship, you're basically running the "Elite Linux Starter Pack."
+
+Are you planning to use tmux to manage your environment variables, or do you prefer to let the shell handle that?
+
+You said
+what do you mean about env vars?
+
+Gemini said
+When you run a shell inside tmux, environment variables (like $PATH, $EDITOR, or your API keys) can get "stuck" or behave differently depending on how the session was started.
+
+Since you are considering running Bash and Fish in parallel, you need to be aware of how they handle these variables, especially because their syntax for setting them is totally different.
+
+1. The Syntax Divide
+This is the biggest hurdle when jumping between the two. If you copy a "How-to" guide for a new tool, it will almost always give you the Bash version.
+
+Feature	Bash (.bashrc)	Fish (config.fish)
+Standard Var	FOO=bar	set FOO bar
+Export (Env Var)	export FOO=bar	set -x FOO bar
+Appending to PATH	export PATH="$HOME/bin:$PATH"	fish_add_path ~/bin
+The Risk: If you set a variable in Bash and then launch Fish inside that Bash shell, Fish will inherit it. But if you change it in Fish, it won't "trickle back" to the parent Bash shell.
+
+2. The tmux "Zombie" Variable Problem
+tmux acts as a middleman. When you start a tmux server, it captures the environment variables of the shell that spawned it.
+
+The Scenario: You update your $PATH in your ~/.bashrc.
+
+The Problem: You go into an existing tmux pane and run source ~/.bashrc. The shell is updated, but the tmux session itself still holds the old version of the variable.
+
+The Result: If you open a new window or pane (whether it's Fish or Bash), it might inherit the old variable from the tmux server instead of your updated config.
+
+Tip: In tmux, you can run tmux show-environment to see what variables the "server" is currently holding hostage.
+
+3. Universal Variables (The Fish Superpower)
+Fish has a unique feature called Universal Variables (set -U).
+If you run set -U MY_THEME "dracula" in one Fish pane, every other Fish shell on your system (current and future) instantly knows that variable. You don't even have to add it to a config file.
+
+Bash has nothing like this. If you use Universal Variables in Fish, remember that your Bash panes will be completely oblivious to them.
+
+4. How to Handle Both Safely
+If you're going to use both, here is the best "Arch/Ghostty/Tmux" strategy:
+
+Keep Global Stuff in .pam_environment or /etc/environment: Put things that both shells need (like EDITOR=nvim or BROWSER=firefox) here. This way, they are set at login before any shell even starts.
+
+Use fish_add_path: Instead of manually hacking the $PATH variable in Fish (which is a mess of colons in Bash but a "list" in Fish), just use the command fish_add_path /your/path. It’s smart enough to not add duplicates.
+
+The "Bass" Plugin: Since you're on Arch, you can install bash-completion and the Fish plugin Bass. Bass lets you run Bash scripts (like those annoying env.sh scripts some programs give you) and injects the resulting variables directly into your Fish session.
+
+Do you have any specific scripts or "heavy" environment setups (like nvm for Node or pyenv for Python) that you're worried about moving over?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

@@ -1,0 +1,49 @@
+Gemini
+Conversation with Gemini
+You said
+on arch with hyprland, I want to change laptop brightness. how? it's framework but the keys don't do it. I think I installed something for it.
+
+Gemini said
+It’s a classic "welcome to Arch" moment—having the hardware but needing to manually wire the software. Since you're on a Framework, you have the hardware support, but Hyprland doesn't handle media keys out of the box.
+
+You likely installed brightnessctl or light. For this guide, I’ll assume brightnessctl as it’s the most common and reliable for Framework laptops.
+
+1. Identify your keys
+Framework laptops usually use XF86MonBrightnessUp and XF86MonBrightnessDown. You need to map these in your Hyprland configuration.
+
+2. Update your Hyprland Config
+Open your config file (usually at ~/.config/hypr/hyprland.conf) and add the following lines.
+
+Note: We use the e flag (repeat) so you can hold the key down, and the l flag so it works even if the screen is locked.
+
+Bash
+# Brightness control
+bindel = , XF86MonBrightnessUp, exec, brightnessctl set 5%+
+bindel = , XF86MonBrightnessDown, exec, brightnessctl set 5%-
+3. Permissions (The "Why isn't it working?" fix)
+If the commands work with sudo but not by themselves, your user isn't in the video group. Run this command:
+
+Bash
+sudo usermod -aG video $USER
+You will need to log out and back in for this change to take effect.
+
+Troubleshooting & Refinements
+If you don't have brightnessctl: Install it via sudo pacman -S brightnessctl.
+
+Check the device name: Frameworks usually "just work," but you can verify your backlight device by running brightnessctl -l.
+
+Minimum Brightness: To prevent accidentally turning your screen completely black, you can set a floor:
+bindel = , XF86MonBrightnessDown, exec, brightnessctl set 5%- && [ $(brightnessctl get) -lt 500 ] && brightnessctl set 500 (adjust numbers based on your max brightness).
+
+Framework Specific Tip
+If you are using the Framework 13 (AMD) or Framework 16, ensure your kernel is up to date (6.1+). Older kernels had quirks with how the ambient light sensor interfered with manual brightness steps.
+
+Does running brightnessctl set 5%+ in your terminal move the needle, or do you get an error message?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

@@ -1,0 +1,190 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+Go to Google home
+install swaync on linux hyprland
+
+Sign in
+AI Mode
+All
+Videos
+Images
+Forums
+Short videos
+Shopping
+More
+Tools
+AI Overview
+To install and set up Sway Notification Center (swaync) on a Hyprland Linux system, you need to install the package using your distribution's package manager and then configure Hyprland to launch it. 
+1. Remove Existing Notification Daemons 
+Before installing SwayNC, it is recommended to remove any other active notification daemons (like mako or dunst) to avoid conflicts. 
+Reddit
+Reddit
+ +1
+For Arch Linux: sudo pacman -R mako 
+2. Install SwayNC
+The installation commands vary by distribution.
+Arch Linux: sudo pacman -S swaync
+Ubuntu (Lunar+) / Debian (Bookworm+): sudo apt install sway-notification-center
+Fedora:
+bash
+sudo dnf copr enable erikreider/SwayNotificationCenter
+sudo dnf install SwayNotificationCenter
+Other Distributions: Refer to the official GitHub repository for instructions or build it from source. 
+GitHub
+GitHub
+3. Configure Hyprland to Autostart SwayNC 
+Edit your Hyprland configuration file, usually located at ~/.config/hypr/hyprland.conf, to launch swaync on startup. 
+Add the following line to your hyprland.conf file:
+conf
+exec-once = swaync
+If you had a line for another notification daemon (e.g., exec-once = mako), ensure you remove or comment it out. 
+4. (Optional) Customize SwayNC 
+SwayNC appears plain by default but can be customized with CSS. 
+YouTube
+YouTube
+ +1
+Copy the default configuration files to your user directory to begin customizing them:
+bash
+mkdir -p ~/.config/swaync
+cp /etc/xdg/swaync/config.json ~/.config/swaync/config.json
+cp /etc/xdg/swaync/style.css ~/.config/swaync/style.css
+You can now edit ~/.config/swaync/config.json and ~/.config/swaync/style.css to change the appearance, themes, and behavior. Many users share their configurations on GitHub or Reddit (e.g., r/unixporn, r/hyprland) for inspiration. 
+Reddit
+Reddit
+ +4
+5. Restart Hyprland
+After configuration changes, log out and log back in, or restart Hyprland for the changes to take effect. You can verify the installation by sending a test notification: 
+bash
+notify-send "Hello" "This is a test notification from SwayNC."
+A notification should pop up. 
+Reddit
+Reddit
+Hyprland Quick-Start Guide Part 2: Enhancing Your Setup with ...
+Dec 4, 2024 — Making Notifications Beautiful with Sway Notification Center (swaync) * Step 0: Remove Mako. sudo pacman -R mako. * Step 1: Instal...
+
+anttdev.com
+Confusion installing Sway Notification Center : r/hyprland
+Oct 5, 2024 — I read some of the comments and Im fully installing hyprland from scratch. Im trying to install Sway Notification Center and Im ha...
+
+Reddit
+
+Rice Hyprland in 2 Hours (Part 5) | Notifications
+Dec 2, 2025 — there's a lot of different ways that you can possibly customize the notification demon which we have already installed. which is S...
+
+
+YouTube
+·
+saneAspect
+17:30
+Show all
+Dive deeper in AI Mode
+AI can make mistakes, so double-check responses
+Confusion installing Sway Notification Center : r/hyprland
+
+Reddit · r/hyprland
+10+ comments · 1 year ago
+Im trying to install Sway Notification Center and Im having some confusion. I ran the sude it tells you to on the github: "sudo pacman -S swaync". It installed ...Read more
+Spent the day refining my SwayNC config. source in ...
+11 posts
+Apr 14, 2025
+I made a tool to complement Swaync. : r/hyprland - Reddit
+11 posts
+Sep 14, 2024
+More results from www.reddit.com
+Videos
+How to Customize SwayNC (dotfiles method)
+YouTube · saneAspect
+May 20, 2025
+YouTube · saneAspect
+
+11:00
+I will just show you how to get a config and adapt it to your own liking as fast as possible.
+Finalizing Theming For My Hyprland, Waybar, Tofi, SwayNC ...
+YouTube · Zaney
+Nov 24, 2023
+YouTube · Zaney
+
+3:46:06
+my hyprland setup as an average user : r/hyprland
+Reddit · HeadPresentation6105
+Dec 19, 2025
+Reddit · HeadPresentation6105
+
+1:05
+Rice Hyprland in 2 Hours (Part 5) | Notifications
+YouTube · saneAspect
+Dec 2, 2025
+YouTube · saneAspect
+
+17:30
+I will show you the simplest way that you can set up a better looking notification demon so that you can get started with it.
+Feedback
+View all
+ErikReider/SwayNotificationCenter: A simple GTK based ...
+
+GitHub
+https://github.com › ErikReider › SwayNotificationCenter
+A simple notification daemon with a GTK gui for notifications and the control center. Note: SwayNotificationCenter only supports Desktops / Window Managers.Read more
+Hyprland Quick-Start Guide Part 2: Enhancing Your Setup with ...
+anttdev.com
+https://anttdev.com › posts › 2024-12-04-hyprland-quic...
+Dec 4, 2024 — Step 1: Install swaync. Install swaync from the AUR (since it's not in the official repositories):. yay -S swaync. Step 2: Autostart swaync.Read more
+Must have
+
+Hyprland Wiki
+https://wiki.hypr.land › Useful-Utilities › Must-have
+Examples: dunst , mako , fnott and swaync . ... If such a file does not exist on your install, please refer to your distro's documentation for help.Read more
+[solved]need to understand "default target to boot into ...
+
+Arch Linux Forums
+https://bbs.archlinux.org › Newbie Corner
+Aug 31, 2023 — The swaync service is designed to be activated via dbus not directly via target (or otherwise). It looks like there's some dbus issue with org.freedesktop. ...Read more
+People also ask
+Where is the Swaync config file?
+What is SwayNC Linux?
+Is SwayNC a notification daemon?
+Feedback
+HYPRLAND with the ML4W Dotfiles 2.9.8. New APPS, LIGHT ...
+
+YouTube · My Linux For Work
+16.2K+ views · 1 year ago
+
+13:57
+In this video, I will guide you through the new features of the latest version 2.9.8 of the ML4W Dotfiles for HYPRLAND - An advanced ...
+
+7 key moments in this video
+Config flex 💪 · ErikReider SwayNotificationCenter
+
+GitHub
+https://github.com › SwayNotificationCenter › discussions
+I found a way to blur swaync on hyprland! Open the swaync section ... My full minimal hyprland setup on CachyOS, no install script, just need to follow readmeRead more
+Images
+How to Customize SwayNC (dotfiles method)
+How to Customize SwayNC (dotfiles method)
+
+YouTube
+how to blur swaync control center properly on hyprland? : r/arch
+how to blur swaync control center properly on hyprland? : r/arch
+
+Reddit
+Hyprland ] rice. Switched to Swaync, added power-profiles ...
+Hyprland ] rice. Switched to Swaync, added power-profiles ...
+
+Reddit
+Show more images
+People also search for
+Swaync themes
+Swaync config
+Swaync control center
+Swaync github
+Swaync Arch
+Swaync wiki
+Swaync dotfiles
+Swaync send notification
+1	
+2
+3
+Next
+94901, San Rafael, CA - From your IP address
+ - Update location
+HelpSend feedbackPrivacyTerms

@@ -1,0 +1,59 @@
+Gemini
+Conversation with Gemini
+You said
+does google gemini cli run on the fish shell
+
+Gemini said
+Yes, the Google Gemini CLI can run within the Fish shell.
+
+Since the official Gemini CLI (often invoked as gemini) is a Node.js-based application, it is generally shell-agnostic. However, because Fish uses a different syntax for environment variables and scripting compared to Bash or Zsh, there are a few specific "Fish-friendly" ways to set it up.
+
+🚀 Installation on Fish
+You can install the CLI using npm or Homebrew, both of which work perfectly in a Fish environment.
+
+Via npm:
+
+Code snippet
+npm install -g @google/gemini-cli
+Via Homebrew:
+
+Code snippet
+brew install gemini-cli
+🔑 Setting Environment Variables
+The most common point of friction with Fish is setting the required API keys or Project IDs. Fish does not use the export VAR=val syntax used in Bash.
+
+To set variables for the current session:
+Code snippet
+set -x GOOGLE_CLOUD_PROJECT "your-project-id"
+set -x GEMINI_API_KEY "your-api-key"
+To make them persistent (Recommended):
+Add these lines to your Fish configuration file (usually located at ~/.config/fish/config.fish):
+
+Code snippet
+set -gx GOOGLE_CLOUD_PROJECT "your-project-id"
+set -gx GEMINI_API_KEY "your-api-key"
+(The -g flag makes it global, and -x exports it so the Gemini CLI process can see it.)
+
+🛠️ Integration Features
+The Gemini CLI includes a run_shell_command tool that allows the AI to execute terminal commands.
+
+Platform Behavior: On macOS and Linux, the CLI typically spawns commands using bash -c. This means that even if you are inside Fish, the specific sub-commands Gemini runs might follow Bash syntax unless configured otherwise.
+
+Interactive Mode: You can use the --yolo flag if you want Gemini to execute shell commands in your Fish terminal without asking for confirmation every time (use with caution!).
+
+💡 Pro Tip: fish-ai
+If you are looking for a more "native" experience, there is a popular community plugin called fish-ai. It is specifically designed for Fish and allows you to:
+
+Turn comments into Fish commands using Ctrl+P.
+
+Fix broken commands in your history.
+
+Use Gemini (via API key) as the backend provider.
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

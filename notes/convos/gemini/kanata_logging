@@ -1,0 +1,62 @@
+Gemini
+Conversation with Gemini
+You said
+I tried starting kanata but it didn't work. on arch linux. how can I see its logs to debug the config?
+
+Gemini said
+Since you're on Arch Linux, you're likely running Kanata either as a systemd user service or manually via the terminal.
+
+Here is how to check the logs for both scenarios:
+
+1. If running as a Systemd User Service
+If you set up a service file in ~/.config/systemd/user/kanata.service, use journalctl with the --user flag. This is the most common way to debug "it didn't work" failures.
+
+View recent logs:
+
+Bash
+journalctl --user -u kanata.service -e
+Follow logs in real-time (best for debugging config changes):
+
+Bash
+journalctl --user -u kanata.service -f
+Check the current status/errors:
+
+Bash
+systemctl --user status kanata.service
+2. If running manually in the Terminal
+If you are starting Kanata by running the binary directly, it should output logs to your terminal (stdout/stderr). If you need more detail to find a syntax error in your .kbd file, use the debug flags:
+
+Run with Debug logging:
+
+Bash
+kanata --cfg /path/to/your/config.kbd --debug
+Only check config syntax (without starting the driver):
+
+Bash
+kanata --cfg /path/to/your/config.kbd --check
+Common "Didn't Work" Reasons on Arch
+If the logs show a Permission Denied (os error 13), it’s usually one of two things:
+
+Missing Group Permissions: Your user needs to be in the input and uinput groups.
+
+Bash
+sudo usermod -aG input,uinput $USER
+(Note: You must log out and back in for this to take effect.)
+
+Missing uinput Module: The kernel module might not be loaded.
+
+Bash
+sudo modprobe uinput
+To make it permanent, create /etc/modules-load.d/uinput.conf and just put the word uinput inside.
+
+Udev Rules: Ensure you have a udev rule for /dev/uinput. You can usually find the recommended rule in the Kanata GitHub documentation.
+
+Would you like me to help you write a systemd service file or a udev rule to automate the startup?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

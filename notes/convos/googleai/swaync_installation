@@ -1,0 +1,126 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+Women's College Basketball Championship 2026
+AI Mode
+All
+Videos
+Images
+Forums
+More
+Sign in
+
+
+install swaync on linux hyprland
+To install and set up Sway Notification Center (SwayNC) on Hyprland, follow these steps to replace any existing notification daemons and ensure it starts automatically. 
+1. Install SwayNC
+Use your distribution's package manager to install the package. Note that on some systems, it is listed as sway-notification-center. 
+GitHub
+GitHub
+Arch Linux: sudo pacman -S swaync (or use yay -S swaync-git for the AUR version).
+Fedora: Enable the COPR repository first:
+sudo dnf copr enable erikreider/SwayNotificationCenter
+sudo dnf install SwayNotificationCenter.
+Ubuntu/Debian: sudo apt install sway-notification-center.
+openSUSE Tumbleweed: sudo zypper install SwayNotificationCenter. 
+GitHub
+GitHub
+ +1
+2. Disable Existing Daemons
+Only one notification daemon can run at a time. If you have Mako or Dunst installed, they may block SwayNC from acquiring the notification name. 
+Reddit
+Reddit
+Remove Mako: sudo pacman -R mako (on Arch) or equivalent for your distro.
+Alternatively, ensure they are not set to autostart in your config files. 
+3. Autostart in Hyprland 
+To have SwayNC start every time you log into Hyprland, add the following line to your ~/.config/hypr/hyprland.conf file:
+bash
+exec-once = swaync
+Use code with caution.
+
+Ref: 
+Reddit
+Reddit
+ +2
+4. Configuration and Theming
+The default configuration is located at /etc/xdg/swaync/config.json. To customize it without root access: 
+Create your local config folder: mkdir -p ~/.config/swaync.
+Copy the default files:
+cp /etc/xdg/swaync/config.json ~/.config/swaync/config.json
+cp /etc/xdg/swaync/style.css ~/.config/swaync/style.css.
+Edit the files: Modify style.css to change the look (colors, fonts, transparency) and config.json to change behavior (position, button actions). 
+YouTube
+YouTube
+ +2
+5. Essential Commands
+You can interact with SwayNC via the terminal to test your setup: 
+Open/Toggle the Control Center: swaync-client -t -sw
+Reload Config (after editing CSS/JSON): swaync-client -rs
+Clear All Notifications: swaync-client -C
+Test a Notification: notify-send "Hello World" "This is a test notification". 
+Reddit
+Reddit
+ +3
+Would you like a sample CSS theme (like Catppuccin or Rose Pine) to jumpstart your customization?
+
+
+
+
+
+undefined
+undefined
+undefined
+11 sites
+Confusion installing Sway Notification Center : r/hyprland
+Oct 5, 2024 — I read some of the comments and Im fully installing hyprland from scratch. Im trying to install Sway Notification Center and Im ha...
+
+Reddit
+
+Hyprland Quick-Start Guide Part 2: Enhancing Your Setup with ...
+Dec 4, 2024 — Making Notifications Beautiful with Sway Notification Center (swaync) * Step 0: Remove Mako. sudo pacman -R mako. * Step 1: Instal...
+
+anttdev.com
+ErikReider/SwayNotificationCenter - GitHub
+Install. Alpine Linux. apk add swaync. Arch. sudo pacman -S swaync. Alternatively, swaync-git is available on the AUR. Fedora. The...
+
+GitHub
+
+Show all
+So I'll have at the bottom of hyprland.conf
+exec-once = waybar
+exec-once = swaync
+Correct! Adding both to the bottom of your hyprland.conf ensures your status bar and notification daemon launch immediately when you log in.
+Since you're running both, a common next step is to link them so you can click an icon on Waybar to open the SwayNC control center.
+To do this, you’ll need to add a custom module to your ~/.config/waybar/config.jsonc:
+json
+"custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='red'><sup></sup></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+},
+Use code with caution.
+
+Then, just add "custom/notification" to your modules-right (or wherever you prefer) in that same config file.
+Would you like the CSS styling to make that Waybar icon match the rest of your bar?
+
+
+
+
+Ask anything
+
+
+AI Mode response is ready

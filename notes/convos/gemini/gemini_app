@@ -1,0 +1,150 @@
+Gemini
+Conversation with Gemini
+You said
+how do you install the google gemini app, and the claude code app on arch, and how run them. I thought I'd already installed them, but somehow I can't find them. how do I find them, start them, see whether they're installed? how? tell me how? don't be coy. make it brief, and explicit, and frank.
+
+Gemini said
+Since you’re on Arch, you likely used the AUR or NPM. On Arch, "apps" aren't always in your desktop menu; they often live in the terminal.
+
+1. Google Gemini (CLI)
+Google's official "app" for Linux is primarily the Gemini CLI.
+
+Check if installed
+Run these in your terminal:
+
+which gemini (Should return a path like /usr/bin/gemini or ~/.npm-global/bin/gemini)
+
+gemini --version
+
+How to Install (if missing)
+The standard way is via NPM:
+
+Bash
+npm install -g @google/gemini-cli
+Alternatively, via the AUR: yay -S gemini-cli
+
+How to Run
+Simply type:
+
+Bash
+gemini
+Note: First-time use requires a Google login via the browser or an API key from Google AI Studio.
+
+2. Claude Code (CLI)
+Anthropic’s Claude Code is a terminal-based agent. It is not the same as the Claude Desktop app (which is unofficial on Linux).
+
+Check if installed
+Run:
+
+which claude
+
+claude --version
+
+How to Install (if missing)
+The official recommended method is the native installer:
+
+Bash
+curl -fsSL https://claude.ai/install.sh | bash
+Alternatively, via the AUR: yay -S claude-code
+
+How to Run
+Navigate to a project directory and type:
+
+Bash
+claude
+Note: You must have a Claude Pro subscription or an Anthropic Console account with credits to use this.
+
+3. "I can't find them" (Troubleshooting)
+If the commands above return "command not found" but you’re sure you installed them via NPM, your PATH is likely the culprit.
+
+Check your NPM global bin:
+npm config get prefix
+
+Add it to your shell config (.bashrc or .zshrc):
+
+Bash
+export PATH=$PATH:$(npm config get prefix)/bin
+Reload your shell: source ~/.bashrc (or .zshrc).
+
+Desktop Apps (GUIs)
+If you are looking for graphical windows (icons in your app drawer):
+
+Gemini: There is no official Google desktop app. You likely installed gemini-desktop from the AUR or Snap. Try running gemini-desktop in the terminal.
+
+Claude: Install claude-desktop-bin from the AUR. You can then run it with the command claude-desktop.
+
+You said
+well, I was sure I'd installed both of them. and then I'd make sure my env variables worked with them. and now I can't find either. not in which. How weird. help. well. help well.
+
+Gemini said
+It sounds like you’re experiencing the classic "Arch Ghost" phenomenon—either the installation failed silently, or more likely, your shell is looking in the wrong place because your PATH isn't updated to include the directories where these tools live.
+
+Since which isn't finding them, they are either not in your PATH or not installed. Let's hunt them down and fix this.
+
+1. The NPM "Ghost" Check
+Most users install Gemini and Claude Code via npm. By default, Arch might not have the NPM global bin in your PATH.
+
+Find where they might be hiding:
+Run this to see where your global NPM packages are stored:
+
+Bash
+npm config get prefix
+If that returns /usr/local, look for the binaries here:
+
+Bash
+ls /usr/local/bin | grep -E 'gemini|claude'
+If it returns something else (like ~/.npm-global), check there:
+
+Bash
+ls ~/.npm-global/bin | grep -E 'gemini|claude'
+2. The AUR Check
+If you used yay or paru, check if the packages are actually registered in the local database:
+
+Bash
+pacman -Qs gemini
+pacman -Qs claude
+If they show up: They are installed, but the binaries aren't in /usr/bin.
+
+If they don't: They were never successfully installed.
+
+3. The "Fix It Now" Strategy
+Don't waste time debugging a broken environment. Follow these steps to ensure they are present and reachable.
+
+Step A: Reinstall via NPM (Forceful)
+Bash
+npm install -g @google/gemini-cli @anthropic-ai/claude-code
+Step B: Hardcode the PATH
+Open your shell config (likely ~/.bashrc or ~/.zshrc) and add this line at the very bottom:
+
+Bash
+export PATH="$PATH:$(npm config get prefix)/bin"
+Apply the change:
+
+Bash
+source ~/.bashrc  # or ~/.zshrc
+4. Verify & Run
+Now, try the "frank" check again:
+
+Check: which gemini and which claude
+
+Run Gemini: Type gemini (it will ask for your API key).
+
+Run Claude: Type claude (it will initiate the Anthropic login).
+
+5. Environment Variables
+You mentioned environment variables. For these to work, they must be exported in that same ~/.bashrc or ~/.zshrc file:
+
+Bash
+export GOOGLE_API_KEY="your_key_here"
+export ANTHROPIC_API_KEY="your_key_here"
+If which still returns nothing after these steps, provide the output of echo $PATH and I’ll tell you exactly what’s broken.
+
+Are you using a specialized shell like Fish or Zsh, or are you on standard Bash?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+
