@@ -1,0 +1,73 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+arch. hyprland. ghostty. tmux. neovim. is there a neovim extension that allows latex files to be viewed nicely?
+
+Gemini said
+That is a heavy-duty Linux power-user stack. Since you're on Arch + Hyprland, you have a few ways to handle this, ranging from "traditional window management" to "bleeding-edge terminal rendering."
+
+Here are the best ways to view LaTeX nicely in Neovim:
+
+1. The Industry Standard: VimTeX + Zathura
+This is the most stable and "pro" setup. VimTeX isn't just a plugin; it's a full-blown LaTeX environment for Neovim.
+
+Plugin: lervag/vimtex
+
+Viewer: Zathura (specifically zathura-pdf-mupdf or zathura-pdf-poppler).
+
+Why it works for you: Zathura is a minimal, keyboard-driven document viewer that fits the Arch/Hyprland aesthetic perfectly.
+
+The Killer Feature: SyncTeX. You can Ctrl+Click in Zathura to jump to that line in Neovim, or press \lv in Neovim to jump to that exact spot in the PDF.
+
+Hyprland Tip: Use a Hyprland "window rule" to keep Zathura tiled next to Ghostty or floating in a specific corner.
+
+2. The "Ghostty" Edge: MdMath
+Since you are using Ghostty, you have access to a terminal that supports modern image protocols (like Kitty's graphics protocol).
+
+Plugin: MdMath.nvim
+
+The Vibe: This allows you to render LaTeX math equations directly inside the terminal buffer as images.
+
+Pros: You don't have to leave the terminal. It looks incredibly "clean" and high-tech.
+
+Cons: It's mostly for previewing equations/formulas within Markdown or specialized LaTeX snippets rather than a full page-by-page document preview.
+
+3. The "Live-as-you-type" Alternative: Knap
+If you want the PDF to update literally every time you stop typing (without manual saves), Knap is the Lua-native way to do it.
+
+Plugin: frabjous/knap
+
+How it works: It creates a bridge between Neovim and your viewer (like Sioyek or Zathura). It's lighter than VimTeX if you only care about the preview aspect and not the full suite of LaTeX commands.
+
+Recommendation for Your Stack
+Given you're using tmux, keep in mind that tmux can sometimes interfere with image protocols (like those used by Ghostty/Kitty).
+
+My Suggestion:
+
+Install VimTeX. It is the backbone of 99% of Neovim LaTeX workflows.
+
+Use Zathura. On Hyprland, it’s lightning fast.
+
+Config Snippet (Lua):
+
+Lua
+vim.g.vimtex_view_method = 'zathura'
+-- This ensures Zathura opens in a way that Hyprland can manage easily
+vim.g.vimtex_view_zathura_options = '-x "neovim --remote +%l %f"'
+
++1
+One last thing: Since you're on Arch, make sure you have xdotool or ydotool installed if you want VimTeX to automatically pull focus to the PDF window when you compile.
+
+Which of these sounds closer to what you're looking for—a separate PDF window or something rendered inside Ghostty?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

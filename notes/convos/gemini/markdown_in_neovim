@@ -1,0 +1,63 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+You said
+arch. hyprland. ghostty. tmux. neovim. is there a neovim extension that allows markdown files to be viewed nicely?
+
+Gemini said
+That is a top-tier minimalist stack. Since you are using Ghostty (which has excellent rendering) and Hyprland, you have two main ways to "view markdown nicely": rendering it directly in the terminal buffer or previewing it in a synchronized browser window.
+
+Here are the best options for your specific setup in 2026:
+
+1. The "In-Editor" Experience (Best for Ghostty)
+If you want to keep everything inside your terminal without opening a browser, render-markdown.nvim is the current gold standard. It uses Tree-sitter to "conceal" the markdown syntax and replace it with high-quality UI elements.
+
+What it does: Converts ### into heading icons, - [ ] into interactive checkboxes, and | table | into clean, bordered boxes—all while you are still in the buffer.
+
+Why it fits you: Since Ghostty supports modern terminal features (like Nerd Fonts and undercurls), this looks incredibly native.
+
+Plugin: MeanderingProgrammer/render-markdown.nvim
+
+2. The "Live Browser" Experience (Classic)
+If you need to see exactly how a README will look on GitHub, or if you have complex LaTeX/Mermaid diagrams, markdown-preview.nvim is the go-to.
+
+What it does: It opens a local port and syncs your Neovim buffer to a browser tab. As you scroll in Neovim, the browser scrolls with you.
+
+Hyprland Tip: You can use a Hyprland "window rule" to automatically tile your browser next to Ghostty when the preview starts.
+
+Plugin: iamcco/markdown-preview.nvim
+
+3. The "Fancy UI" Alternative
+If you find render-markdown too minimal, markview.nvim is a newer, more "opinionated" plugin that aims to make Neovim feel almost like a dedicated Markdown editor (similar to Obsidian).
+
+Feature: It has a very polished look for code blocks and horizontal rules.
+
+Plugin: OXY2DEV/markview.nvim
+
+Quick Comparison Table
+Feature	render-markdown	markdown-preview	markview
+View Location	Inside Neovim	Browser Tab	Inside Neovim
+Dependencies	Tree-sitter	Node.js / Yarn	Tree-sitter
+Best For	Fast note-taking	GitHub READMEs	Aesthetic UI
+Performance	Extremely Lightweight	Moderate	Lightweight
+Implementation Recommendation
+Given your tmux + Ghostty setup, I recommend starting with render-markdown.nvim. It keeps your workflow entirely keyboard-driven within the terminal. If you use Lazy.nvim, you can add it like this:
+
+Lua
+{
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- or nvim-tree/nvim-web-devicons
+    opts = {},
+}
+Do you prefer keeping your workflow strictly in the terminal, or do you usually have a browser open on a second workspace?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

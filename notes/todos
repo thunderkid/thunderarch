@@ -8,8 +8,21 @@ x git repos for laptop
 my own wifi hotspot list, eero mac
 chrome tab max cpu in waybar
 
-github cli
+x github cli
 cliphist or copyq 
 
 X stow bashrc etc
 try for organizing experiments https://pages.tobi.lutke.com/try/
+
+fish to be default shell
+hotkey for open ghostty with tmux
+meta u / i for most recent workspaces
+meta j / k to actually work for most recent window
+rofi overlay of notes. markdown viewer for nvim (vs obsidian?)
+hotkey to overlay btop instead of workspace 9
+pnpm (install via sh?) and node
+gemini cli
+tmux fish vi mode, history in vim, cut and paste?
+kanata escape chord
+pixi install for python etc. what about old py3?
+
