@@ -1,0 +1,223 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+what are the best ai integration options for neovim? I'm very interested in, eg, being able to have a claude or gemini chat *with my web subscription rate, not some per-token billed api bullshit* so that instead of having to navigate the conversation with some shitty proprietary website or tui I can use neovim navigation.
+
+I hear you—there is nothing more annoying than paying $20/month for a "Pro" web subscription only to be hit with a separate per-token bill just because you want to use the model in your editor.
+
+The short answer is: Official web subscriptions and API keys are fundamentally separate. Claude and Gemini do not provide a "legal" way to use your web session inside Neovim. However, there are three distinct ways to bypass the "per-token bullshit" using Neovim.
+
+1. The "Native" Way: GitHub Copilot
+If you want a flat-rate subscription that "just works" in Neovim, GitHub Copilot ($10/mo) is the only one with first-class support.
+
+The Hack: Modern plugins like avante.nvim or codecompanion.nvim can use your Copilot subscription as the "provider" to give you a chat interface and inline edits without extra costs.
+
+The Catch: You are stuck with Copilot's models (usually GPT-4o or Claude 3.5 Sonnet), and it’s not using your direct Claude.ai or Gemini Advanced subscription.
+
+2. The "Bridge" Way: Claude Code & Gemini CLI
+In early 2026, both Anthropic and Google released official CLI agents (Claude Code and Gemini CLI). These are designed to live in your terminal and are often included in certain subscription tiers or have much higher "free" ceilings than the raw API.
+
+avante.nvim: This is currently the "Cursor for Neovim" heavyweight. It has built-in ACP (Agent Client Protocol) support. It can literally "spawn" the Claude Code or Gemini CLI process in the background and pipe the chat into a Neovim buffer.
+
+Why this fits you: You get the Neovim keybindings and navigation you want, but the heavy lifting is done by the CLI tool rather than a metered API call.
+
+3. The "Free Tier" Strategy: Gemini 2.0 / 1.5 Flash
+If your "bullshit" meter is mostly about the cost, Google Gemini is currently the best "loophole."
+
+The Strategy: Use gemini-cli.nvim or codecompanion.nvim with a Gemini API key.
+
+The Cost: Google offers a massive free tier for Gemini 1.5 Flash (and often 2.0 Flash) through Google AI Studio. It allows for thousands of requests per day for free, provided you're okay with them using your data for tuning (similar to the web subscription).
+
+Navigation: You get full Neovim motions, Markdown rendering, and project context without paying a cent beyond your internet bill.
+
+My Recommendation
+If you want the absolute best UX with the least amount of "token-counting" anxiety, go with Avante.nvim using the Gemini 1.5 Flash (via AI Studio) or Claude Code integration.
+
+Quick Start with Avante (Lazy.nvim)
+Lua
+{
+  "yetone/avante.nvim",
+  event = "VeryLazy",
+  opts = {
+    provider = "gemini", -- Or "claude" if using Claude Code
+    gemini = {
+      model = "gemini-1.5-flash", -- Virtually free/high quota
+      max_tokens = 4096,
+    },
+  },
+}
+One final note: If you're looking for a plugin that literally "scrapes" your browser session to use your $20/month Claude.ai chat, those exist (look for "browser-cookie" based adapters in gp.nvim), but they break constantly because Anthropic/Google hate them. Using the CLI agents is the more stable way to get "subscription-like" behavior in the terminal.
+
+Does that help you dodge the token-tax, or were you specifically hoping to bridge a specific existing account?
+
+is gemini 2.0 / flash 1.5 equal to the latest gemini that I'm using right here? or is it some hobbled historical thing?
+
+To give you the straight talk: Gemini 1.5 and 2.0 are definitely the "historical" stuff now.
+
+If you are using the web interface today (April 2026), you are likely talking to Gemini 3.1 Pro or Gemini 3 Flash. Using 1.5 Flash in Neovim would feel like coding with a blunt crayon compared to what you’re used to in the browser.
+
+Here is the breakdown of how the versions stack up and how to get the "good stuff" in your editor without getting billed.
+
+1. The Version Hierarchy (April 2026)
+Gemini 3.1 Pro: This is the current "brain." It has the highest reasoning and "vibe coding" capabilities. It’s what powers the paid Gemini Advanced web tier.
+
+Gemini 3 Flash: This is the high-speed, frontier-class model. It rivals the intelligence of last year's flagship models but runs instantly. This is likely what you want in Neovim.
+
+Gemini 2.x / 1.5: These are being actively deprecated (with many shut down dates scheduled for mid-2026). They are significantly worse at logic and following complex system prompts.
+
+2. How to get the "Web" Model for Free in Neovim
+You don't have to settle for the old versions. Google AI Studio (the developer side) almost always offers the latest Flash models for free with very high rate limits.
+
+Get the Key: Go to Google AI Studio.
+
+Pick the Model: Look for gemini-3-flash-preview or gemini-3.1-flash-lite.
+
+The "Hack": In your Neovim config (using a plugin like Avante.nvim or CodeCompanion), point the model to the 3.x series.
+
+3. Recommended Neovim Setup
+Since you want that "web subscription" feel (fast, smart, no per-token anxiety), here is the move:
+
+Plugin: Avante.nvim. It mimics the Cursor AI sidebar.
+
+Provider: Use the Gemini API via AI Studio.
+
+Model: Set it to gemini-3-flash-preview.
+
+Why this wins:
+
+Zero Cost: As of right now, Google provides a "Free of Charge" tier for Flash models in AI Studio that is way more generous than any other provider.
+
+No "Hobbled" Logic: You’re getting the same architecture as the web version.
+
+Vim Navigation: You get to use / to search the chat, dd to delete AI hallucinations, and :w to save the chat logs if you want.
+
+The Reality Check:
+The only reason to use the "Pro" model (3.1 Pro) in Neovim is if you are doing heavy architectural refactoring. For 90% of coding—writing functions, boilerplate, and unit tests—Gemini 3 Flash is effectively indistinguishable from the web experience, just faster and inside your buffers.
+
+Does that clear up the version confusion, or are you looking to pipe the "Thinking" (Pro) models specifically?
+
+so avante with gemini would be a bit like cursor?
+
+Yes, Avante.nvim is essentially the "Neovim flavor of Cursor."
+
+It doesn't just give you a chat window; it attempts to replicate the specific "Agentic" workflow that made Cursor famous. Since you're looking to avoid the "per-token bullshit" while keeping the power of the latest models (like Gemini 3), this is exactly the tool you want.
+
+Here is how Avante compares to Cursor and why it solves your problem:
+
+1. The "Cursor" Features in Neovim
+The Sidebar: Just like Cursor, you get a sidebar (:AvanteToggle) for long-form chatting.
+
+Inline Edits: You can select a block of code and press a key (usually <leader>aa) to ask the AI to refactor it. It shows a side-by-side diff inside Neovim so you can y (accept) or n (reject) the changes—exactly like Cursor's Cmd+K.
+
+Codebase Context (@ Mentions): You can type @codebase in the chat to let the AI scan your project using RAG (Retrieval-Augmented Generation), or @file to pull in specific buffers.
+
+Multi-file Editing: In "Agentic" mode, the AI can actually plan a change and apply it across multiple files in your project.
+
+2. Why it beats the Web Subscription for you
+Since you're using a Gemini API Key (which has a massive free tier for Gemini 3 Flash/Lite), you get a "Web-like" experience with these perks:
+
+No Copy-Pasting: You aren't bouncing between Chrome and Neovim. You ask, and the code appears in your buffer.
+
+Vim Keybindings: You use your existing motions to navigate the chat, search through history, and jump between the diffs.
+
+Privacy/Control: Unlike the web interface, you can tell Avante exactly which files it’s allowed to see.
+
+3. The "Gotchas" (Avante vs. Cursor)
+While Avante is amazing, it's worth being realistic about two things:
+
+Tab Autocomplete: Cursor has a custom "Copilot++" model for predicting your next few lines of code. Avante can do auto-suggestions, but it's not quite as "telepathic" as Cursor's native implementation.
+
+Configuration: Cursor is "batteries included." Avante is a Neovim plugin—you'll need to install make, cargo (for the sidebar build), and a few dependencies like dressing.nvim or nui.nvim.
+
+How to set it up (The "No-Bill" Config)
+If you use lazy.nvim, add this to your plugins. This uses the Gemini Flash model which, as of 2026, has a free tier so generous it's basically impossible to hit as a single developer.
+
+Lua
+{
+  "yetone/avante.nvim",
+  event = "VeryLazy",
+  build = "make", -- Important: builds the sidebar UI
+  opts = {
+    provider = "gemini",
+    gemini = {
+      model = "gemini-3-flash", -- The "current" high-speed model
+      max_tokens = 8192,
+    },
+    -- This mimics Cursor's sidebar behavior
+    mappings = {
+      ask = "<leader>aa",
+      edit = "<leader>ae",
+      refresh = "<leader>ar",
+    },
+  },
+}
+The Verdict: If you want the power of the web-tier Gemini 3 but want to use your Neovim navigation to drive the car, Avante is the gold standard. It turns Neovim into a pro-grade AI IDE.
+
+Are you comfortable with a bit of Lua configuration, or do you want the "simplest possible" way to just get a chat window open?
+
+ok, this seems to be the cursor equivalent. Now, if I want to be able instead merely to ask quick questions without cutting and pasting into a web page or tui, what's the best way to do that? In arch/hyprland/neovim, I could see benefit from each of terminal based, nvim popup, and hyprland popup
+
+Since you’re on Arch with Hyprland and Neovim, you have the perfect "Triumvirate" of tools to build a zero-latency, zero-cost AI workflow.
+
+To avoid the "per-token bullshit" while having quick access, here are the three best ways to integrate Gemini/Claude without leaving your flow.
+
+1. The Neovim Popup (Best for Contextual Coding)
+If you just want to ask a question about the code you're looking at without opening a full sidebar like Avante, use CodeCompanion.nvim.
+
+The Workflow: Highlight code (or not) and hit a keybind to open a small, floating prompt.
+
+Why it's better than the web: It automatically pulls in the current buffer context so you don't have to copy-paste.
+
+The Setup: Use the Gemini API key (Free Tier).
+
+Lua
+-- Example mapping for a quick floating chat
+vim.api.nvim_set_keymap("n", "<leader>aq", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+2. The Terminal Popup (Best for General Logic/Shell)
+Since you’re on Arch, you should leverage the official Claude Code or Gemini CLI. These are terminal-native and feel incredibly "Unix-y."
+
+Claude Code: npm install -g @anthropic-ai/claude-code. It's an agentic CLI that can run commands, search your files, and answer questions.
+
+The "Neovim" integration: You don't even need a plugin. Just use :term claude inside a Neovim split.
+
+The Advantage: It’s faster than any GUI. You type claude "how do I fix this systemd error?", it answers, and you hit Ctrl-D to get back to work.
+
+3. The Hyprland "Scratchpad" (The Productivity Cheat Code)
+This is the "pro" move. Instead of tying the AI to Neovim, tie it to a global Hyprland keybind. This way, you can ask questions while looking at your browser, a terminal, or your config files.
+
+Tool: Use Pyprland or a standard Hyprland scratchpad.
+
+The Setup:
+
+Create a "Special Workspace" (scratchpad) for a terminal running gemini or claude.
+
+Bind it to Mod + Space.
+
+Hyprland Config Example:
+
+Bash
+# hyprland.conf
+bind = $mainMod, Space, exec, pypr toggle ai_chat
+(In your pyprland.json, define ai_chat as a kitty terminal running gemini-cli.)
+
+Comparison: Which one when?
+Feature	Neovim Popup (CodeCompanion)	Terminal CLI (Gemini CLI)	Hyprland Scratchpad
+Best For	"Explain this function"	"Write a quick bash script"	"I'm stuck on a system error"
+Context	Full access to your code buffers	Access to local files	Global (visible over any app)
+Cost	Free (Gemini AI Studio Key)	Free (Gemini) / Sub (Claude)	Free (Gemini AI Studio Key)
+Vibe	Integrated & Seamless	Fast & Functional	Instant & Everywhere
+My Recommendation: 1.  For Neovim: Set up CodeCompanion with a Gemini API key. Use it for inline "What does this do?" questions.
+2.  For Global: Set up a Hyprland Scratchpad running the Gemini CLI. It feels like having a "God Mode" terminal that slides down from the top of your screen whenever you're confused, then disappears when you're done.
+
+Since you're on Arch, do you prefer managing these through a Neovim plugin manager, or are you comfortable dropping a few lines in your hyprland.conf?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

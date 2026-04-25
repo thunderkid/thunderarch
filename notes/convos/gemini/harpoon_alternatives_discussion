@@ -1,0 +1,156 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+in neovim, the harpoon plugin allows you to switch quickly between different lcoations in codebase. but seems marks allow same thing. what's the most modern/fast/best way to do this stuff?
+
+The short answer is that Marks are for "where was I?" (state), while Harpoon is for "where am I going?" (intent).
+
+In 2026, the ecosystem has matured past basic marks. While Harpoon remains the gold standard for "workflow-based" navigation, several modern alternatives offer more features or better performance.
+
+1. The Distinction: Marks vs. Harpoon
+Vim Marks (m[a-z]): These are great for jumping to a specific line in a specific file. However, they are hard to manage across projects, difficult to visualize, and require you to remember which letter corresponds to which file.
+
+Harpoon: It treats your files as a pinned task list. You don't mark a line; you "harpoon" a file to a slot (1, 2, 3, 4). This allows for muscle-memory switching (e.g., <leader>1 for your component, <leader>2 for its styles) that persists and stays consistent as you work.
+
+2. The Modern "Best" Ways (2026)
+The Powerhouse: Grapple.nvim
+If you like the idea of Harpoon but find it too limited, Grapple is the modern successor many are switching to.
+
+Why it’s better: It supports scopes. You can have different sets of pinned files for different Git branches or projects.
+
+Key Feature: It handles "tags" much more gracefully than Harpoon's UI and integrates natively with Telescope and modern statuslines.
+
+The Minimalist Choice: Snacks.nvim (Picker/Explorer)
+Created by folke, snacks.nvim has become the "all-in-one" utility for high-performance configs.
+
+Modern Workflow: Instead of manually pinning files, many users now use the Snacks Picker for "Recent Files" or "Buffers." It’s so fast that the "mental overhead" of pinning a file with Harpoon is often slower than just fuzzy-finding the last 3 files you touched.
+
+The Hybrid: Portal.nvim
+If you find yourself jumping around but losing your place, Portal enhances the jumplist. It visually shows you where you're jumping to (like a more intelligent Ctrl-O / Ctrl-I), making "marks" feel obsolete because the jump history becomes searchable and visible.
+
+3. Summary Comparison
+Method	Best For...	Persistence	Complexity
+Native Marks	Jumping within a single file/session.	Per-file	Low
+Harpoon2	4-5 "core" files you switch between 100x a day.	Per-project	Medium
+Grapple.nvim	Complex projects with multiple branches/contexts.	Per-branch	Medium
+Telescope/Snacks	Finding any file in the project instantly.	Session-based	High (Config)
+The "Best" Setup for 2026:
+The most efficient modern workflow usually combines two things:
+
+Fuzzy Finder (Telescope or Snacks): Use this for 90% of navigation.
+
+Harpoon/Grapple: Use this for the 2-4 files you are currently editing to toggle between them instantly without typing a single search character.
+
+Pro-tip: If you use Harpoon, map the UI to a very accessible key (like <C-e>) so you can reorder your "harpooned" files on the fly. This turns your navigation into a dynamic dashboard rather than a static list of marks.
+
+ok. i'm currently using fzf-lua for find buffers, find oldfiles, etc. and ctrl-^ for switch to last buffer.
+
+You’re already in the "high-performance" bracket. Using fzf-lua is arguably the fastest way to fuzzy-find in Neovim right now (it's often snappier than Telescope), and <C-^> (the alternate file toggle) is the ultimate "pro" habit for two-file workflows.
+
+However, there is a speed ceiling with fuzzy finding: you still have to type a query, look at a list, and hit enter.
+
+Here is how you can level up that specific setup to the "2026 standard" without adding bloat:
+
+1. The "Harpoon Gap"
+The reason people use Harpoon alongside fzf-lua is predictability.
+
+fzf-lua: Great for "I need to find that helper function."
+
+Harpoon: Great for "I am working on User.js and User.test.js. I want to swap between them with one keystroke, 100% of the time, without looking at a list."
+
+If you find yourself using fzf-lua to find the same 3 files over and over, you’re wasting "search cycles."
+
+2. The Modern "Harpoon-Lite" Workflow
+Since you already like the fzf-lua / <C-^> speed, don't switch to a heavy plugin. Try this setup:
+
+A. Add Harpoon (or Grapple) for "The Big Four"
+Stick to just 4 files. Map them to your thumb:
+
+Alt-1 → File 1
+
+Alt-2 → File 2
+
+Alt-3 → File 3
+
+Alt-4 → File 4
+
+This removes the "search" step entirely. It becomes a tactile reflex, like switching weapons in an FPS game.
+
+B. Optimize fzf-lua for "Frecency"
+Standard oldfiles is just a chronological list. If you aren't already, use a Frecency (Frequency + Recency) algorithm. This ensures that the files you use most often are always at the top of your fzf-lua list, even if you just opened 20 other files.
+
+3. The "Flash" Jump (The Final Piece)
+If you are moving between locations on the screen rather than just files, the modern best-in-class is Flash.nvim.
+
+Why: Instead of using marks or scrolling, you type a label that appears on the screen and teleport there instantly. It works across visible windows, so you can jump from a line in your buffer to a specific line in your terminal or a second split without "navigating" there.
+
+Summary Checklist for your Config:
+[ ] Keep fzf-lua: It’s faster than Telescope for large projects.
+
+[ ] Add Harpoon2: Use it only for the files you are currently "hooked" into.
+
+[ ] Master <C-o> and <C-i>: These are your "back" and "forward" buttons in your jump history. Use them more than marks.
+
+[ ] Check out Flash.nvim: For moving your cursor to a specific word without spamming j or k.
+
+Are you finding that your current fzf-lua workflow feels "slow" because of the typing, or is it more about the mental effort of remembering file names?
+
+for speed of switching and mental effort. i want undistracted flow. harpoon seems old. does it combine with fzf-lua? dude seems to have a wankfest with telescope author. how about jumping between actual lines in different files vs just the files?
+
+I hear you—the "Telescope vs. the world" drama is real, and if you're already using fzf-lua, you clearly value performance over "shiny" UI.
+
+If Harpoon feels like a rigid 2021 workflow, it’s because it basically is. Here is the 2026 way to handle line-level navigation and undistracted flow without getting bogged down in plugin politics.
+
+1. The Modern Alternative: Arrow.nvim
+If you want something that feels like "Harpoon but smarter," look at Arrow.
+
+Why it fits you: It specifically solves the "just the file" problem. Arrow allows for per-buffer bookmarks that save your exact cursor position (line and column).
+
+Speed: It’s designed for single-key usage. You can toggle a "quick menu" that feels much more like a modern HUD than a scratchpad.
+
+FZF-Lua: It doesn't care about your picker. It’s a standalone logic layer for your "intent-based" jumps.
+
+2. Jumping Between Actual Lines (Not just Files)
+If you need to jump between Line 40 in auth.lua and Line 200 in api.lua, you have two "best" paths:
+
+A. Grapple + Portal (The "Wormhole" Workflow)
+Instead of just jumping to a file, you use Grapple to tag a specific line. Then, you use Portal.nvim.
+
+Portal is a "jump-list" enhancer. When you "portal out," it doesn't just switch buffers; it gives you a visual preview of the exact lines you were at previously.
+
+It’s the most "undistracted" way to move because you don't have to remember where you were; you just look at the portal and go.
+
+B. The "Oil" Strategy (No plugin needed)
+Since you use fzf-lua, you should be using :FzfLua jumps.
+
+The Flow: Most people forget the jumplist exists. If you are editing Line A, then jump to Line B in another file, <C-o> takes you back to the exact line in the previous file.
+
+To make this "modern," don't just use <C-o>. Use fzf-lua to search your jumplist. This lets you see a list of every specific line you've touched recently across all files and fuzzy-find back to them.
+
+3. How to combine them with fzf-lua
+You don't need a "formal integration." You just need a logical split:
+
+Frequency	Tool	Action
+100x / hour	<C-^>	Toggle between your current two "active" files.
+50x / hour	Arrow or Grapple	Pinned slots (1, 2, 3) for the "pillars" of your current task.
+10x / hour	fzf-lua files	Finding a new file you haven't touched yet.
+Spontaneous	fzf-lua jumps	"I was at a specific line 5 minutes ago, take me back."
+My Recommendation for "Undistracted Flow":
+Drop Harpoon. If the vibe is off, the workflow will be too.
+
+Install Arrow.nvim. Use it for the "persistent" spots you need to hit across files. It stores the line numbers by default.
+
+Map fzf-lua jumps. This is your "multiverse" navigator. It handles the "jumping between lines in different files" better than any manual marking system because it happens automatically as you work.
+
+Does the idea of searching your actual jump history (the places you've already been) feel more natural than manually "tagging" lines as you go?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

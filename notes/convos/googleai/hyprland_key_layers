@@ -1,0 +1,482 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+Earth Day 2026
+AI Mode
+All
+Products
+Visual matches
+Sign in
+
+
+Visually searched image
+what is this
+This is a screenshot of a tiling window manager (likely Hyprland, based on the configuration file being edited) running on a Linux-based operating system.
+The image shows a highly customized terminal-centric workflow, often referred to as "rice" or "dotfiles" in the Linux community. Here’s a breakdown of what you’re seeing:
+Window Manager (Hyprland): A dynamic tiling Wayland compositor that organizes windows into a non-overlapping grid.
+Terminal Emulator: The windows are running a shell (likely zsh given the prompt style) with a customized theme showing git status and system info.
+Text Editor (Neovim): The large window on the left shows someone editing a hyprland.conf file to set up keyboard shortcuts (keybindings) for taking screenshots using a tool called grimblast.
+File Manager (yazi): The top-right window is a terminal-based file manager showing directories like brainy, Downloads, and junk.
+Multiplexer (tmux): The yellow bar at the very bottom indicates tmux is being used to manage multiple terminal sessions within a single window.
+In short, it's a custom Linux desktop environment optimized for productivity and keyboard-driven navigation.
+Would you like to know more about how to set up a similar environment or what specific tools are being used?
+
+
+
+
+how improve it? not aesthetics, but efficiency and studliness
+To push this setup from "functional" to "studly and hyper-efficient," you need to minimize friction between your brain and the computer. Since you’re already using Hyprland, Neovim, and Yazi, you have the foundation.
+Here is how to level up the efficiency:
+1. Master the "Context Switch"
+Efficiency is killed by searching for windows.
+Persistent Scratchpads: Use Hyprland's special workspaces for things you need instantly but not constantly (like a calculator, btop, or a music player). Bind them to a single key so they toggle over your current work.
+Smart Workspaces: Use window rules to force specific apps (Browser, Discord, Dev tools) to specific workspaces. You should never have to "look" for your browser; it should always be on Workspace 2.
+2. Deep Integration (The "Unix Way")
+Make your tools talk to each other so you don't have to leave the terminal.
+Yazi + Neovim: Set up a keybind in Yazi to open files in your existing Neovim instance rather than a new one. This keeps your workflow in a single "brain."
+Zoxide: Replace cd with zoxide. It learns your habits so you can jump to your deepest project folder by just typing z brainy.
+FZF (Fuzzy Finder): If you aren't using fzf everywhere, you're losing time. Use it to search command history, find files, and even switch git branches instantly.
+3. Automate the Mundane
+Keychord / Leader Keys: Instead of complex Ctrl+Alt+Shift+S combos, use a "Leader" key in Neovim and Tmux. It’s much faster to tap Space, then s, then s than to claw-grip your keyboard.
+Shell Aliases: If you type a command more than three times a day, alias it. gcp for git commit && git push, for example.
+Headless Scripting: Use hyprctl (the Hyprland CLI) to write scripts that rearrange your entire layout for specific tasks, like a "Coding Mode" or a "Deep Work Mode" that closes all distractions.
+4. The "Studly" Factor: Minimize UI
+True efficiency often looks like nothing is happening.
+Remove the Bars: If you know what workspace you’re on, you don't need a status bar. Use waybar with "autohide" or remove it entirely and use notifications (mako or dunst) for system info.
+Keyboard-Only Browser: Use the Vimium extension in your browser. Navigating the web with j/k and f to click links is the ultimate efficiency flex.
+Are you more interested in scripting your workflow with hyprctl or optimizing your Neovim config for faster coding?
+
+
+
+
+does the leader key concept work in hyprctl too?
+Yes, the leader key concept works in Hyprland through a feature called submaps. 
+Reddit
+Reddit
+ +1
+While Neovim has a dedicated leader variable, Hyprland achieves this by letting you create custom "modes" (submaps). When you press your "leader" key, you enter a separate layer of keybindings where you can execute actions with single keystrokes. 
+Hyprland Wiki
+Hyprland Wiki
+How to Implement a "Leader Key" in Hyprland
+You can set this up in your hyprland.conf or trigger it dynamically via hyprctl keyword.
+1. Define your "Leader" Key
+Choose a key (e.g., SUPER + Space) to enter your custom mode.
+bash
+# Enter the "leader" submap
+bind = SUPER, Space, submap, leader
+Use code with caution.
+2. Create the Submap
+Everything between submap = leader and submap = reset will only work after you press your leader key. 
+Hyprland Wiki
+Hyprland Wiki
+bash
+submap = leader
+
+# Example: Press 'b' to open browser, 't' for terminal
+bind = , b, exec, firefox
+bind = , b, submap, reset  # Reset after action so you're not stuck in the mode
+
+bind = , t, exec, kitty
+bind = , t, submap, reset
+
+# Escape key to cancel and go back to normal
+bind = , escape, submap, reset
+
+submap = reset
+Use code with caution.
+Why this is "Studly" for Efficiency
+Namespace your binds: You can have hundreds of shortcuts without memorizing complex combinations like SUPER+ALT+SHIFT+K. Just do Leader → k.
+One-handed use: Once in a submap, you don't need to hold down any modifier keys (like Shift or Alt), which is much better for ergonomics.
+Visual Feedback: You can configure Waybar to show which submap you are currently in, so you never get lost in your own "modes". 
+YouTube
+YouTube
+ +3
+
+
+
+
+
+undefined
+undefined
+undefined
+5 sites
+The Hyprland Setup I'd Build If Starting Over (Lessons Learned)
+Nov 24, 2025 — i've built dozens of Hyperland setups over the past few years i've made every mistake that you can possibly imagine right wasted h...
+
+18:45
+
+
+YouTube
+·
+saneAspect
+Vim like key functionality. · Issue #4251 - GitHub
+Dec 25, 2023 — In Vim key combinations with the key don't require the key to be held down the entire time, instead after the key is pressed you h...
+
+
+GitHub
+Use hyprland submap to keep original, simpler, non-shifted ...
+Oct 21, 2025 — Hyprland allows for submaps, so another approach could be to preserve the older bindings but provide a minimal submap that can be ...
+
+
+GitHub
+Show all
+can you have, eg leader sa      -> screenshot area, leader ss -> screenshot screen
+Native "Leader keys" (tapping a sequence of keys) don't exist in Hyprland like they do in Neovim or tmux. Normally, Hyprland expects you to hold a modifier (like Super) and hit a key.
+However, you can achieve exactly what you want using Submaps. This allows you to enter a "Screenshot Mode" (your Leader) where single keys then trigger specific actions.
+Here is how to set up Super + S as your leader, followed by A for area or S for screen:
+nix
+# 1. Enter the "screenshot" submap
+bind = $mainMod, S, submap, screenshot
+
+# 2. Define the submap behaviors
+submap = screenshot
+
+# bind 'a' to screenshot area
+binde = , A, exec, grimblast --freeze copy area
+# bind 'a' to also exit the submap back to global
+binde = , A, submap, reset
+
+# bind 's' to screenshot screen
+binde = , S, exec, grimblast --freeze copy screen
+binde = , S, submap, reset
+
+# use 'escape' to cancel and go back to normal mode
+bind = , escape, submap, reset
+
+# 3. Reset the submap (REQUIRED)
+submap = reset
+Use code with caution.
+Why this is "Efficient & Studly":
+Ergonomics: You stop doing "keyboard gymnastics" (holding 4 keys at once). You tap Super+S, let go, then tap A.
+Scalability: You can add leader p for "print" or leader u for "upload" without ever needing more modifiers.
+Visual Feedback: To be truly elite, you can configure your status bar (Waybar) to change color or display "📸 SCREENSHOT MODE" whenever that submap is active.
+Pro-Tip for "Studliness"
+If you want a "true" Leader key (just tapping a key like Space or Alt without holding it), look into keyd or kmonad. They handle remapping at the hardware level, allowing you to turn a single tap of Caps Lock into a "Leader" that Hyprland can listen for.
+Do you want to see how to make Waybar reflect when you've entered one of these modes?
+
+
+
+
+no. i mean can the leader sometimes be followed by two keys instead of one
+Yes, you can absolutely do that by nesting submaps. In the world of window managers, this is known as "chained" or "sequential" keybindings.
+To do Leader -> s -> a, you essentially create a breadcrumb trail of submaps. Each keypress takes you one level deeper until you trigger the command.
+Here is the logic for your config:
+nix
+# 1. Main 'Leader' key (e.g., Super + Space) enters the first level
+bind = $mainMod, SPACE, submap, leader
+
+submap = leader
+# 2. Pressing 's' here enters the SECOND level (screenshot mode)
+bind = , S, submap, screenshot_keys
+# Escape to cancel everything
+bind = , escape, submap, reset
+submap = reset
+
+# 3. Define the second level (The 'S' branch)
+submap = screenshot_keys
+# 'a' triggers the area screenshot and resets back to normal
+bind = , A, exec, grimblast --freeze copy area
+bind = , A, submap, reset
+
+# 's' triggers the full screen and resets
+bind = , S, exec, grimblast --freeze copy screen
+bind = , S, submap, reset
+
+# Escape to cancel
+bind = , escape, submap, reset
+submap = reset
+Use code with caution.
+Why this works:
+The "Leader" (Super+Space): Puts the keyboard into a state where it's waiting for a category (like s for screenshots, o for open, w for window).
+The "Category" (s): Puts the keyboard into a specific state for that action.
+The "Action" (a or s): Executes the terminal command and immediately resets the submap so your keyboard goes back to typing normally.
+The "Studly" Warning:
+The only downside to deep nesting is feedback. If you get three levels deep and forget where you are, your keyboard will feel "broken" because it's only listening for those specific submap keys.
+To prevent this, most people keep a bind = , escape, submap, reset in every submap, so you always have a "panic button" to get back to your normal keyboard.
+Would you like to know how to add a timeout so the submap automatically resets if you don't hit a key within 3 seconds?
+
+
+
+
+sure, and also can you have feedback in waybar so it shows what you've already typed in leader land
+To implement a timeout and visual feedback for your "Leader land" key sequences, you'll need to combine a few tricks. Hyprland doesn't have a built-in timeout parameter for submaps, so you use a sleep command to force a reset. For visual feedback, Waybar includes a specific module to track active submaps. 
+GitHub
+GitHub
+ +3
+1. The "Auto-Reset" Timeout
+To ensure you don't get "stuck" in a submap if you walk away or forget what you've typed, you can chain a sleep and a hyprctl dispatch command to the key that enters the submap. 
+GitHub
+GitHub
+ +1
+bash
+# Enter leader mode and reset automatically after 3 seconds of inactivity
+bind = $mainMod, SPACE, exec, hyprctl dispatch submap leader && sleep 3 && hyprctl dispatch submap reset
+Use code with caution.
+[!WARNING]
+This simple sleep method is a "dumb" timer; it will reset after 3 seconds even if you are actively typing. For a truly "smart" timeout that resets on every keypress, you would need a more complex external script.
+2. Waybar Feedback
+You can use the built-in hyprland/submap module in Waybar to see exactly where you are in your sequence. 
+ManKier
+ManKier
+ +1
+In your Waybar config.jsonc:
+Add the module to your bar and name it so it shows the path you've taken. 
+Arch Linux manual pages
+Arch Linux manual pages
+ +1
+json
+"modules-left": ["hyprland/submap", ...],
+
+"hyprland/submap": {
+    "format": "   {}", // The {} will be replaced by the submap name
+    "max-length": 20,
+    "tooltip": false
+}
+Use code with caution.
+In your hyprland.conf:
+Name your submaps clearly so the Waybar feedback is useful. 
+GitHub
+GitHub
+nix
+# Level 1: Leader
+bind = $mainMod, SPACE, submap, LEADER...
+submap = LEADER...
+
+# Level 2: Nested path
+bind = , S, submap, LEADER > SCREENSHOT
+submap = LEADER > SCREENSHOT
+
+bind = , A, exec, grimblast copy area
+bind = , A, submap, reset
+# ... repeat reset binds for other keys
+submap = reset
+Use code with caution.
+3. Efficiency Tip: The "Panic" Reset
+Always include a global escape hatch so you can exit "Leader land" instantly if the Waybar shows you've made a typo. 
+nix
+# Put this inside EVERY submap block
+bind = , escape, submap, reset 
+Use code with caution.
+Would you like help writing a custom script to make that timeout "smart" so it resets the 3-second timer after every keypress?
+Medical Disclaimer: I am an AI, not a doctor. This information is for general purposes only. Please consult a healthcare professional for medical concerns. For information on substances, refer to Drugs.com.
+
+
+
+
+
+undefined
+undefined
+undefined
+7 sites
+A simple waybar widget to indicate current hyprland ... - Reddit
+Jan 8, 2026 — A simple waybar widget to indicate current hyprland keybinding submap (eg indicate resize mode is active) : r/hyprland. Skip to ma...
+
+
+Reddit
+·
+r/hyprland
+waybar-hyprland-submap(5) - Arch manual pages
+format: typeof: string. default: {} The format, how information should be displayed. On {} the currently active submap is displaye...
+
+Arch Linux manual pages
+timeout for submap reset : r/hyprland - Reddit
+Aug 26, 2023 — I'm using a submap (named "appselect") for launching my programs. This way I basically have the whole keyboard available when I go...
+
+
+Reddit
+·
+r/hyprland
+Show all
+does all this go in hyprland.conf ?
+Most of it does, but it’s split between two files to handle the logic and the visuals.
+1. The Keybindings (hyprland.conf)
+The Submap logic and the Leader keys go directly into your hyprland.conf. This is where you define what the keys actually do.
+nix
+# --- Inside hyprland.conf ---
+
+# Start the sequence
+bind = $mainMod, SPACE, submap, LEADER...
+
+submap = LEADER...
+    # Nesting into the screenshot category
+    bind = , S, submap, LEADER > SCREENSHOT
+    bind = , escape, submap, reset 
+submap = reset
+
+submap = LEADER > SCREENSHOT
+    # The actual actions
+    bind = , A, exec, grimblast copy area
+    bind = , A, submap, reset
+
+    bind = , S, exec, grimblast copy screen
+    bind = , S, submap, reset
+
+    bind = , escape, submap, reset 
+submap = reset
+Use code with caution.
+2. The Visual Feedback (~/.config/waybar/config.jsonc)
+The Waybar module needs to be enabled in your Waybar configuration file (usually config or config.jsonc).
+You need to add "hyprland/submap" to your modules-left (or center/right) list and then define how it looks in the same file:
+json
+"hyprland/submap": {
+    "format": "<span style=\"italic\">{}</span>", 
+    "tooltip": false
+},
+Use code with caution.
+3. The Styling (~/.config/waybar/style.css)
+To make it look "studly" (e.g., making the text glow red when you are in a submap), you add this to your Waybar CSS:
+css
+#submap {
+    background: #e64553; /* A nice red/orange */
+    color: #11111b;
+    padding: 0 10px;
+    margin: 0 4px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+Use code with caution.
+Summary of what goes where:
+Action Logic: hyprland.conf
+Bar Structure: waybar/config.jsonc
+Bar Aesthetics: waybar/style.css
+Once you save these, run killall waybar && waybar & to see the changes.
+Would you like to see how to add a custom notification (using swaync or dunst) that pops up when you enter Leader land, in case you aren't looking at your bar?
+
+
+
+
+but how does this compare do doing things via rofi?
+Using Rofi and Hyprland submaps is a classic trade-off between visual convenience and pure speed.
+Here is how they compare for a high-efficiency workflow:
+1. Speed and Muscle Memory
+Submaps (Leader Keys): These are faster because they don't involve a separate program launching or a window appearing. Once your muscle memory kicks in, you can hit Space -> s -> a in a fraction of a second without waiting for a UI transition.
+Rofi: Even a well-configured Rofi (or Wofi/Tofi on Wayland) has a slight "popup" latency. It’s better for things you don't do every five minutes—like launching a rarely-used app or choosing a specific music playlist. 
+Reddit
+Reddit
+ +3
+2. Search vs. Static Logic
+Rofi: Its "studliness" comes from its fuzzy search capability. If you have 50 different scripts, you don't want 50 key combinations. You just type rofi, then scr... and hit enter.
+Submaps: These are static. They are best for a small set of "God-tier" commands (Screenshots, Window Management, Layout toggles) that you want to be able to execute with your eyes closed. 
+Reddit
+Reddit
+ +3
+3. Visual Feedback
+Rofi: Gives you a clear menu. If you forget your options, they are right there on the screen.
+Submaps: Usually "invisible." Unless you set up the Waybar integration we discussed, you're flying blind. 
+GitHub
+GitHub
+ +3
+Comparison at a Glance
+Feature	Hyprland Submaps	Rofi / Wofi
+Input Style	Chained keypresses (s then a)	Typing/Searching (scr...)
+UI Overhead	Zero (Purely internal)	Medium (Launches a window)
+Best For	High-frequency repetitive tasks	Discovering rarely used commands
+Learning Curve	High (Requires memorization)	Low (Visual list provided)
+The "Studly" Pro Setup
+Most elite users actually use both:
+Submaps for "Physical" desktop actions (screenshots, moving windows to workspaces, media controls).
+Rofi for "Content" discovery (launching apps, searching files, clipboard history). 
+Reddit
+Reddit
+ +3
+Would you like a script that combines them—for example, a "Leader" key that opens a Rofi menu only if you stay idle for 1 second?
+
+
+
+
+
+undefined
+undefined
+undefined
+12 sites
+Use hyprland submap to keep original, simpler, non-shifted ...
+Oct 21, 2025 — Hyprland allows for submaps, so another approach could be to preserve the older bindings but provide a minimal submap that can be ...
+
+
+GitHub
+jason9075/rofi-hyprland-keybinds-cheatsheet - GitHub
+rofi-hyprland-keybinds-cheatsheet * Hyprland: You must have Hyprland installed and properly configured on your system. * Rofi: Thi...
+
+
+GitHub
+ebeem/guile-swayer: Extensible Guile bindings for SwayWM - GitHub
+May 10, 2025 — Submaps. Submaps are keymaps bound to specific prefix keys, grouping related commands under a common prefix. This logical grouping...
+
+GitHub
+Show all
+when it comes to a screenshot, you can't really have a menu to select eg whether to screenshot a region or active window or whole screen, because then the menu would appear in the screenshot. is that correct, or would it have gone by then?
+That is a very sharp observation. You are mostly correct, but it depends entirely on how you trigger the capture.
+Here is the breakdown of why Rofi can be a "ghost" in your screenshots and how the "studly" way solves it.
+1. The "Race Condition" (The Problem)
+If you use a Rofi menu to select "Screenshot Area," and your script immediately runs grimblast, the Rofi window might still be in the middle of its "close" animation when the screen is captured.
+Result: You get a screenshot with a blurry, half-transparent Rofi window blocking your view.
+The Hacky Fix: People often add sleep 0.2 to their scripts to give the menu time to vanish, but that feels slow and unoptimized.
+2. The Submap Advantage (The Efficiency)
+This is exactly why Hyprland Submaps (the "Leader land" we discussed) are superior for screenshots.
+Invisible: Submaps aren't a "window." They are just a state of the compositor. There is nothing to hide, so there is zero delay between your keypress and the capture.
+Instant: You get the screenshot the exact millisecond you hit the key.
+3. The "Grimblast" Special Sauce
+If you use grimblast (which is in your screenshot), it has a specific flag designed to solve this: --freeze.
+When you run grimblast --freeze copy area, it "freezes" the screen instantly.
+Even if a menu was there, you can sometimes use tools like slurp to select a region behind or around it, but the better way is simply to ensure the menu is killed first.
+The "Pro" Way to use Rofi for Screenshots
+If you really want a menu (because you have 10 different screenshot options and don't want to memorize them), you write your script like this:
+bash
+# Inside your screenshot script
+killall rofi && grimblast --freeze copy area
+Use code with caution.
+By explicitly calling killall rofi before the screenshot tool starts, you ensure the menu is purged from the desktop's memory before the pixels are grabbed.
+Summary: Which is "Studlier"?
+Rofi: Good if you want a visual list of options (Region, Window, Screen, Upload to Imgur, etc.).
+Submaps: The "Elite" choice. It’s faster, requires no "kill" commands, and keeps your screen 100% clean without any artificial sleep delays.
+Do you want to try setting up the Submap version first, or would you prefer a clean Rofi script that auto-kills itself before the capture?
+
+
+
+
+can submaps show succeeding options for the next key?
+By themselves, no—Hyprland submaps are purely "internal" logic states; they have no built-in visual menu or "hint" system. If you enter a submap and forget which key does what, you’re just stuck until you hit Escape.
+However, if you want that "studly" efficiency where the UI helps you without getting in the way of the screenshot, you have two great options:
+Option 1: The "Waybar Breadcrumbs" (Low Profile)
+As we touched on earlier, you can make Waybar show the available keys. This is the most efficient because it’s already on your screen and doesn't count as a "window" that might mess up a screenshot.
+In hyprland.conf:
+nix
+# Name the submap with the "hints"
+bind = $mainMod, S, submap, 📸 [a]rea | [s]creen | [w]indow
+submap = 📸 [a]rea | [s]creen | [w]indow
+    bind = , a, exec, grimblast --freeze copy area
+    bind = , a, submap, reset
+    # ... other binds
+submap = reset
+Use code with caution.
+In your Waybar, the bar will instantly update to show: 📸 [a]rea | [s]creen | [w]indow. It tells you exactly what to press next.
+Option 2: The "Keyhints" Popup (The Studliest Way)
+If you want something that looks like WhichKey from Neovim (a little window that pops up only when you need it), you can use a tiny, lightweight notification or a "dead-simple" OSD (On-Screen Display).
+You can chain a notification to your Leader key:
+nix
+# When you hit the leader, send a notification that disappears after 2 seconds
+bind = $mainMod, S, exec, notify-send -t 2000 "Screenshot Mode" "A: Area\nS: Screen\nW: Window"
+bind = $mainMod, S, submap, screenshot
+
+submap = screenshot
+    # When you pick an option, kill the notification immediately so it's not in the shot
+    bind = , a, exec, killall dunst || killall mako || killall swaync
+    bind = , a, exec, grimblast --freeze copy area
+    bind = , a, submap, reset
+    # ... 
+submap = reset
+Use code with caution.
+Why Option 2 is "Hyper-Efficient":
+Passive Learning: After three days, you’ll stop looking at the popup because your fingers will remember.
+No Ghosting: Because the command starts with killall [notification-daemon], the hints are wiped from the screen the millisecond you make your choice, ensuring a clean screenshot.
+Summary
+Submaps provide the speed (no window-manager overhead).
+Waybar/Notifications provide the visual cues.
+Would you like the Waybar CSS to make that submap hint "pop" with a specific color when active?
+
+
+
+
+Ask anything
+
+
+AI Mode response is ready

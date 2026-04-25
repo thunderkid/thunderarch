@@ -1,0 +1,264 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+in hyprland. I just pressed some key combo - don't know which - and my browser seemed to vanish. i had lots of valuable tabs open. how do I get them back
+
+Don't panic! In Hyprland, it is much more likely that your browser has been "hidden" or moved rather than actually closed. Because Hyprland is a dynamic tiling compositor, windows usually only disappear if they are moved to a different workspace, toggled into a special "scratchpad," or minimized.
+
+Here are the most likely ways to find your lost browser:
+
+1. Check the Special Workspace (Scratchpad)
+Many Hyprland configs use a "special" workspace as a scratchpad for things like terminals or browsers. If you accidentally hit Super + S (or whatever your config uses for togglespecialworkspace), your browser might be sitting in a hidden layer.
+
+Action: Try pressing Super + S (or your configured scratchpad toggle) to see if it reappears.
+
+2. Check Other Workspaces
+It’s very easy to accidentally "send" a window to another workspace.
+
+Action: Use Super + 1 through 0 to cycle through your workspaces.
+
+Pro Tip: If you have a bar like Waybar, look at the workspace icons. If a workspace number is highlighted or has a dot under it, there’s a window living there.
+
+3. Cycle Through Windows
+If the browser is just buried under another window in "fullscreen" or "tabbed" mode:
+
+Action: Use your focus keys (usually Super + Left/Right or Super + H/L) to see if the focus frame moves to an "invisible" window.
+
+4. Check if it's "Floating" or Minimized
+While Hyprland doesn't have a traditional "taskbar" minimize, some scripts or custom configs implement a hide/minimize feature.
+
+Action: Open your terminal and type:
+
+Bash
+hyprctl clients
+This will list every open window. Look for your browser (e.g., class: google-chrome or class: firefox). If it appears in this list, look at the workspace: line to see exactly where Hyprland thinks it is.
+
+If the browser actually crashed or closed...
+If hyprctl clients doesn't show your browser, the process might have died.
+
+The "Undo" Button: Re-open the browser. Almost all modern browsers (Chrome, Firefox, Brave) will detect an "improper exit" and show a bar at the top saying: "Browser didn't shut down correctly. Restore Pages?"
+
+History Shortcut: If that doesn't appear, press Ctrl + Shift + T. This is the universal shortcut to "Reopen Closed Tab." If the whole window closed, this will often bring back the entire window with all tabs intact.
+
+Which browser are you using, and do you remember roughly which keys you were reaching for? (e.g., were you trying to hit Q to quit something else and hit Super + Q by mistake?)
+
+it's on a workspace that is now completely blank. i was using chromium. and I had a bunch of conversations with gemini - but was not logged in
+
+Since you can see the workspace but it’s "blank," we need to determine if the window is invisible/minimized or if the process has died.
+
+The fact that you weren't logged in makes this a high-stakes rescue mission—if that process closes, those "incognito-style" session tabs are usually gone for good.
+
+1. The "Ghost Window" Check
+In Hyprland, windows can sometimes be toggled into a "hidden" state or moved to a coordinates off-screen if a script glitched.
+
+Run this command in your terminal to see if Chromium is still alive and where it’s hiding:
+
+Bash
+hyprctl clients | grep -A 10 "Chromium"
+If it shows up: Look at the hidden: and floating: fields.
+
+The Fix: If it’s there but invisible, try toggling fullscreen (Super + F) or "pseudo-tiling" (Super + P) while focused on that blank workspace to see if it forces a redraw.
+
+2. Check for "Fullscreen" Hiding
+Sometimes a window enters a fullscreen state on a workspace, and if you have a "fullscreen-only" layout, it might look like the workspace is empty if the rendering is hung.
+
+Action: Try hitting Super + M or Super + F (the default Hyprland keys for maximizing/fullscreen) while on the blank workspace.
+
+3. If Chromium has actually closed...
+If hyprctl clients returns nothing, Chromium has exited. Because you weren't logged in, standard "Cloud Sync" won't save you, but Local Session Restore might.
+
+Relaunch Chromium immediately.
+
+Do not open new tabs yet.
+
+Look for the "Restore pages?" bubble in the top right.
+
+If that doesn't appear, press Ctrl + Shift + T. This works for the last window closed, not just the last tab.
+
+⚠️ A Note on Gemini Conversations
+If you were using Gemini while not logged in, your conversations are stored in your browser's Local Cache/Session Storage.
+
+If the browser is still running (but hidden): Finding the window will restore everything perfectly.
+
+If the browser crashed: Chromium should remember the text in the session storage when you hit "Restore," but it's not 100% guaranteed.
+
+Does hyprctl clients show Chromium as an active window, or is the list empty?
+
+hyprctl clients didn't show it. i did restore, but each of the tabs now just points to 'gemini.google.com' and is blank. just an empty prompt. previously pointed to something like 'gemini.google.com/app/blahblah'
+
+This is the "Digital Heartbreak" scenario. When you use Gemini without being logged in, your conversations exist only in the browser's Volatile Session Memory.
+
+The reason your tabs are now blank is that those specific /app/blahblah URLs were temporary session IDs. Once the Chromium process ended, those IDs became invalid, and the "Restore" function could only point you back to the base URL because the temporary data that lived inside those pages was never written to your hard drive.
+
+Before we give up, there are two "Hail Mary" moves you can try:
+
+1. The Back Button Strategy
+Sometimes, Chromium restores the "state" but fails to trigger the internal navigation.
+
+Action: On one of those blank Gemini tabs, click and hold the "Back" button (or right-click it).
+
+What to look for: See if there is a previous URL in the history list that looks like gemini.google.com/app/.... If it's there, try selecting it.
+
+2. Check the "Closed Tabs" History
+Since you were not logged in, your "Google Activity" won't have the chats, but your local browser history might have cached the specific URLs.
+
+Action: Press Ctrl + H to open History.
+
+Filter: Type "Gemini" in the search bar.
+
+The Goal: Look for entries from the last hour. If you see URLs with long strings of random characters at the end, try clicking them. If the session data is still in your local cache, it might—just might—re-render.
+
+How to prevent this in Hyprland (The "Post-Mortem")
+To make sure this doesn't happen again while you're hacking away in a tiling window manager:
+
+Bind a "Kill" confirmation: If you suspect you hit a key combo that killed the window (like Super + Q), change your Hyprland config to require a double-tap or a more complex combo to close windows.
+
+The Scratchpad Safety: If you accidentally sent it to the "Special Workspace" and then killed the process, check your hyprland.conf. Ensure your "close window" bind isn't dangerously close to your "workspace switch" binds.
+
+Login is a Safety Net: Even if you prefer privacy, being logged in to Gemini (even on a burner account) ensures those /app/ links are backed up to the cloud instantly.
+
+Were you able to find any of those specific URLs in your Ctrl + H history, or is it just showing the generic home page everywhere?
+
+just generic. this is pretty annoying. tell me about a gemini burner account.
+
+The blank screen and "lost" session IDs are common in tiling window managers like Hyprland because Chromium doesn't always handle the way wayland compositors "unmap" windows gracefully.
+
+If you want to avoid this without linking your "main" digital identity to every single thought you have, a burner account is the way to go. Here is how to set one up and keep it separate.
+
+1. Creating the Burner
+The goal is an account with zero connection to your real name, phone number, or main email.
+
+The Name: Use a random name generator.
+
+The "Skip" Trick: When creating a Google account, if you use a Mobile Browser (like Bromite or Firefox on your phone) or an Incognito window on your desktop, Google often provides a "Skip" button for the phone number field.
+
+The Recovery Email: Use a "throwaway" encrypted email like ProtonMail or Tutanota. Do not use your primary Gmail as the recovery address.
+
+2. The "Hyprland Sandbox" Method
+Since you're on Hyprland, you can make this burner account feel like a separate app entirely so it doesn't mix with your personal browsing.
+
+Create a Search Profile: Run Chromium with a specific "User Data" flag to keep the burner's cookies and history in a separate folder:
+
+Bash
+chromium --user-data-dir="$HOME/.config/chromium-burner" --app=https://gemini.google.com
+Bind it in Hyprland: Add a shortcut to your hyprland.conf so you can launch your "Gemini App" instantly:
+
+Plaintext
+bind = $mainMod SHIFT, G, exec, chromium --user-data-dir="$HOME/.config/chromium-burner" --app=https://gemini.google.com
+3. Locking Down Privacy
+Once the burner is created, you should immediately toggle these settings in the Gemini Privacy Hub:
+
+Gemini Apps Activity: Set this to Off if you want "Incognito" style privacy while logged in. However, if you want your chats to survive a Hyprland crash, leave it On but set the Auto-delete to 3 months.
+
+Human Reviewers: Google explicitly warns that human reviewers may read chats to train the model. Never put PII (Personally Identifiable Information) or API keys into a Gemini prompt, even on a burner.
+
+Why this would have saved you today
+If you had been logged into a burner:
+
+Cloud Sync: Even if you killed the window, you could log in from any device and your history would be on the left sidebar.
+
+Persistent URLs: Those /app/blahblah URLs would be permanent links tied to the account, not temporary session tokens that expire when the process dies.
+
+Do you have a spare email or a second phone number you can use for verification if Google gets aggressive with the "Prove you're human" checks?
+
+no spare emails or phone numbers. can't I just promise?
+
+I wish it worked on the honor system! If "I promise I'm a real person" were a valid input, the internet would be 99% bots by dinner time.
+
+Google is particularly aggressive about this. They don't want a "pinky swear"; they want data. However, since you're on Linux and clearly prefer a more "manual" control over your environment, there are a few ways to get that persistent history without handing over your primary identity or a phone number.
+
+1. The "Alias" Strategy (No new email needed)
+If you use an encrypted email provider like Proton Mail, you can create "aliases." You don't need a new account; you just create a secondary address that feeds into your main inbox.
+
+The Benefit: You use the alias to sign up for Google. If Google ever starts spamming or gets compromised, you just delete the alias.
+
+The Catch: Google might still demand a phone number during signup if they detect you're using a VPN or a "suspicious" IP.
+
+2. Use a "Privacy-First" Alternative (The "No-Login" Hero)
+If you hate the idea of a Google account but want your chats to survive a Hyprland crash, stop using the Gemini web interface and use a local-first AI client.
+
+Since you're already using a tiling window manager, you'd probably like DuckDuckGo AI Chat.
+
+How it works: Go to duckduckgo.com/?q=DuckDuckGo+AI+Chat.
+
+The Gemini Connection: You can select Gemini Pro as the model.
+
+The Safety Net: It is completely anonymous, but it uses local browser storage much more robustly than the official Gemini site. Even if you kill the window, as long as you don't clear your browser cache, the "Restore" button usually brings back the text because it isn't tied to a volatile Google session ID.
+
+3. The "Developer" Path (API Key)
+This is the most "Linux" way to do it.
+
+Go to Google AI Studio. (You might still need to log in once with your main account, but bear with me).
+
+Generate an API Key.
+
+Use a local terminal client (like aichat or a simple Python script).
+
+Why this is better: Your conversations are saved as local text files on your machine. Hyprland can crash, your computer can explode, and your logs will still be in ~/.config/ai-chats/.
+
+A Quick Tip for your hyprland.conf
+To prevent the "vanishing window" mystery in the future, add this to your config:
+
+Plaintext
+# This makes it so Super+Q (or your close key) doesn't work 
+# on Chromium unless you really mean it.
+windowrule = confirmrenegade, chromium
+(Note: Some users also bind their "kill" command to something harder to hit, like Super+Shift+C instead of a single key.)
+
+Does the idea of using Gemini through a local terminal/app sound better than dealing with Google's signup headaches?
+
+one reason I'm not logged in is I'm nervous about logging in to google with chromium on arch. should I be?
+
+That is a very healthy "Arch Linux" instinct to have. The short answer is: Technically, it is safe, but there are some caveats you should know about.
+
+Chromium on Arch is a first-class citizen, but using it with a Google account involves a few "layers" of trust. Here’s the breakdown of why you might (or might not) want to do it.
+
+1. The "Sync" Dilemma
+A few years ago, Google actually cut off the ability for third-party builds of Chromium (like the one in the Arch repos) to use "Google Sync."
+
+The Reality: If you try to log into Chromium on Arch today, you can log into websites (Gmail, Gemini), but your bookmarks, history, and passwords will not sync to Google's servers unless you use the official Google Chrome.
+
+The Security Side: Because you can't "Sync," logging in to Gemini is just like logging into any other website. It doesn't give the browser itself "keys to the kingdom" like it does on Windows or macOS.
+
+2. Chromium vs. Chrome (Trusting the Source)
+Chromium (Official Arch Repo): This is built from source by the Arch maintainers. You can see exactly how it’s built. It’s "de-googled" to an extent—it doesn't include the proprietary bits like widevine (for Netflix) or the internal Google updater.
+
+Google Chrome (AUR): This is just a script that downloads the official Google .deb file and repackages it for Arch. You are trusting Google’s binary, but the AUR script itself is usually very simple and easy to audit.
+
+3. The Privacy Trade-off
+If you log in to Gemini with Chromium on Arch:
+
+Google sees: Your IP, your browser fingerprint, and your chat history.
+
+Google DOES NOT see: Your local Arch system files, your Hyprland config, or your other open windows. Browsers are heavily "sandboxed"—they live in a little container that can't easily peek at the rest of your Linux install.
+
+Is it "Safe"?
+Yes. From a malware/hacking perspective, logging in to Google on Arch is safer than doing it on Windows because of how Linux handles permissions and how Arch builds its packages.
+
+However, if your "nervousness" is about Privacy, then you are right to be cautious. Google will link your chat activity to your identity.
+
+My Recommendation (The "Middle Way")
+Since you're on Hyprland and already like the idea of separate workspaces, try this:
+
+Keep Chromium for your "Anonymous" browsing. (Don't log in).
+
+Install google-chrome from the AUR (using yay -S google-chrome).
+
+Use Chrome only for Gemini. * This keeps all your Google cookies/tracking inside one app.
+
+Since it's the official Chrome, it handles "Restore Session" much more reliably than Chromium does when a Wayland compositor (like Hyprland) crashes.
+
+You can set a Hyprland "windowrule" to always open Google Chrome on a specific workspace (e.g., Workspace 9) so it stays out of your way.
+
+Does knowing that Chromium on Arch is actually "less" connected to Google than the standard version make you feel better or worse about using it?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+

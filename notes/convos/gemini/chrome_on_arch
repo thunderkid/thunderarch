@@ -1,0 +1,109 @@
+Gemini
+About GeminiOpens in a new window
+Gemini AppOpens in a new window
+SubscriptionsOpens in a new window
+For BusinessOpens in a new window
+Conversation with Gemini
+how install chrome on arch
+
+Installing Google Chrome on Arch Linux is a bit different than on Windows or macOS because Chrome isn't in the official Arch repositories. Instead, it’s hosted in the Arch User Repository (AUR).
+
+Since you are using Arch, I'm assuming you're comfortable with the terminal. Here is the most straightforward way to get it done.
+
+Option 1: The Manual Way (No AUR Helper)
+If you don't have an AUR helper (like yay or paru) installed yet, follow these steps:
+
+Install prerequisites:
+Make sure you have the base development tools and Git installed.
+sudo pacman -S --needed base-devel git
+
+Clone the Chrome package:
+Navigate to your downloads folder and pull the build files from the AUR.
+git clone https://aur.archlinux.org/google-chrome.git
+
+Build and Install:
+Enter the directory and run makepkg. The -s flag installs dependencies, and -i installs the package once built.
+cd google-chrome
+makepkg -si
+
+Option 2: Using an AUR Helper (Recommended)
+If you already have yay or paru installed, it’s a single command. This is much easier for future updates.
+
+Using yay:
+yay -S google-chrome
+
+Using paru:
+paru -S google-chrome
+
+Why isn't it in the official repo?
+Arch Linux officially supports Chromium, the open-source base for Chrome. Because Google Chrome contains proprietary code and a different licensing agreement, Arch devs leave it to the community-maintained AUR.
+
+Quick Comparison
+Feature	Chromium	Google Chrome
+Source	Open Source	Proprietary
+Repository	Official (extra)	AUR
+Auto-updates	Via pacman	Via AUR helper
+Syncing	Limited	Full Google Integration
+Pro Tip: If you want a "de-googled" or purely open-source experience without the proprietary tracking bits, you can simply run sudo pacman -S chromium.
+
+Do you already have an AUR helper like yay set up, or are you doing a fresh install?
+
+how about brave?
+
+Brave follows the same logic as Chrome on Arch: it isn't in the official repositories, so you'll need to use the AUR.
+
+The most popular version to install is brave-bin. The -bin suffix means it’s a pre-compiled binary—using this will save you from having to compile the entire browser from source, which can take hours and eat up all your RAM.
+
+Option 1: Using an AUR Helper (Fastest)
+If you have yay or paru, just run:
+
+Bash
+yay -S brave-bin
+Option 2: Manual Install
+If you don't use an AUR helper, the process is the same as the Chrome install:
+
+Clone the repo:
+git clone https://aur.archlinux.org/brave-bin.git
+
+Build and install:
+cd brave-bin
+makepkg -si
+
+Alternative: Flatpak
+If you prefer sandboxed applications or don't want to mess with the AUR, Brave is officially maintained on Flathub.
+
+Install Flatpak (if you haven't):
+sudo pacman -S flatpak
+
+Install Brave:
+flatpak install flathub com.brave.Browser
+
+Which one should you pick?
+Method	Update Style	Performance
+AUR (brave-bin)	System-native; updates via AUR helper.	Best; feels like a native app.
+Flatpak	Isolated; updates via flatpak update.	Great; slightly larger disk footprint.
+AUR (brave)	Compiles from source.	Not recommended unless you have a supercomputer and a lot of time.
+One quick heads-up: Users occasionally report that Brave sets itself as the default image viewer on Arch after installation. If your JPEGs start opening in a browser, just right-click one and reset the "Open With" default back to your preferred image viewer.
++1
+
+Are you planning to sync your bookmarks and data from Chrome over to Brave?
+
+no
+
+Fair enough! A clean slate is usually the way to go when switching browsers anyway—it keeps things snappy and avoids bringing over old cache bloat.
+
+Since you're going with Brave, here are two quick things you'll probably want to check right after installation:
+
+Brave Rewards: It’s turned on by default. If you aren't interested in the BAT crypto system or seeing "sponsored" background images on your new tab page, you can toggle it off in brave://settings/rewards.
+
+Widevine: If you plan on watching Netflix, Spotify, or Disney+, Brave will usually show a small pop-up asking for permission to install "Widevine." You’ll need to say yes to that, or DRM-protected video won't play.
+
+Are you sticking with the default Arch kernel, or are you running something like linux-zen for better desktop responsiveness?
+
+
+
+
+
+Gemini is AI and can make mistakes.
+
+
